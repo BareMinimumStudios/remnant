@@ -1,4 +1,4 @@
-![Offline Player Cache Banner](https://cdn.modrinth.com/data/cached_images/38a9b779772577bb5924af170e38f9cb1e313855.png)
+![Remnant Banner](https://cdn.modrinth.com/data/cached_images/38a9b779772577bb5924af170e38f9cb1e313855.png)
 
 <p style="text-align: center">
     <img href="https://github.com/PlayerEXDirectorsCut/offline-player-cache/blob/1.20.1/main/LICENSE" src="https://img.shields.io/badge/MIT-MIT?style=for-the-badge&label=LICENCE&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fblob%2F1.20.1%2Fmain%2FLICENSE">
@@ -31,8 +31,7 @@
 
 ### Preamble 📝
 
-**Offline Player Cache: Directors Cut** has been completely redone from the ground up, and its framework predates `1.*` and below.
-This was developed in mind to have **persistent leaderboards** for servers for their offline players.
+Remnant was developed in mind to have **persistent leaderboards** for servers for their offline players.
 
 ### Content 📦
 Modders may register `Record`'s linked with an id and a `Codec` to serialize/deserialize it.
@@ -43,27 +42,27 @@ Upon a player's reconnection to the server, their cached data is deleted.
 
 ### Commands
 
-#### `/opc get <uuid>|<name> <key>`
+#### `/remnant get <uuid>|<name> <key>`
 Provides details about the current player value. If they are online, it will provide their **current** value, but if they are offline, it will provide their **cached** value.
 
-#### `/opc remove <uuid>|<name> <key>`
+#### `/remnant remove <uuid>|<name> <key>`
 If the player with the associated username or UUID is offline, it will remove that players **cached** value based on the selected key.
 If the player is **online**, nothing will occur with this command.
 
-#### `/opc list <uuid>|<name>`
+#### `/remnant list <uuid>|<name>`
 Lists all the keys and values this player has stored if they are offline, or if they are online, their current ones.
 
 ## Developers Guide
 
 ### Setup
-Offline Player Cache has a [**Modrinth**](https://modrinth.com/mod/opc-directors-cut) and [**Curseforge**](https://curseforge.com/minecraft/mc-mods/opc-directors-cut) page.
+Remnant has a [**Modrinth**](https://modrinth.com/mod/opc-directors-cut) and [**Curseforge**](https://curseforge.com/minecraft/mc-mods/opc-directors-cut) page.
 
 In order to develop with the API, please add the following:
 
 **`gradle.properties`**
 
 ```properties
-opc_version=...
+remnant_version=...
 ```
 
 **`build.gradle`**
@@ -80,9 +79,9 @@ repositories {
 }
 
 dependencies {
-    modImplementation "maven.modrinth:opc-directors-cut:${project.opc_version}"
+    modImplementation "maven.modrinth:opc-directors-cut:${project.remnant_version}"
     // include this if you do not want to force your users to install the mod.
-    include "maven.modrinth:opc-directors-cut:${project.opc_version}"
+    include "maven.modrinth:opc-directors-cut:${project.remnant_version}"
 }
 ```
 
@@ -102,9 +101,9 @@ repositories {
 }
 
 dependencies {
-    modImplementation("maven.modrinth:opc-directors-cut:${properties["opc_version"]}")
+    modImplementation("maven.modrinth:opc-directors-cut:${properties["remnant_version"]}")
     // include this if you do not want to force your users to install the mod.
-    include("maven.modrinth:opc-directors-cut:${properties["opc_version"]}")
+    include("maven.modrinth:opc-directors-cut:${properties["remnant_version"]}")
 }
 ```
 
