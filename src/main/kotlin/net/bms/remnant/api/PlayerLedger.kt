@@ -39,7 +39,7 @@ object PlayerLedger {
      * @throws IllegalStateException If the given [id] is already registered.
      */
     @JvmStatic
-    inline fun <reified R : Record> register(id: ResourceLocation, codec: Codec<R>, noinline serializer: PlayerSerializer<R>): PlayerLedgerKey<out R> {
+    inline fun <reified R : Record> register(id: ResourceLocation, codec: Codec<R>, noinline serializer: PlayerSerializer<R>): PlayerLedgerKey<R> {
         val key = PlayerLedgerKey(id, codec, serializer)
 
         registeredKeys.computeIfAbsent(id) { key }

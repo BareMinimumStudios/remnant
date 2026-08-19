@@ -33,7 +33,7 @@ repositories {
 cloche {
     metadata {
         modId = "remnant"
-        name = "Remnant"
+        name = "remnant"
         description = "Allows the ability to cache player data to the server based on ledger keys."
         license = "BML-1.0"
 
@@ -54,7 +54,6 @@ cloche {
             official()
         }
 
-        accessWideners.from(file("src/main/remnant.accessWidener"))
 
         dependencies {
         }
@@ -64,7 +63,6 @@ cloche {
         minecraftVersion = "1.21.1"
         loaderVersion = libs.versions.fabric.loader
 
-        accessWideners.from(file("src/main/remnant.accessWidener"))
 
         includedClient()
 
@@ -102,7 +100,6 @@ cloche {
         minecraftVersion = "1.21.1"
         loaderVersion = libs.versions.neoforge.loader
 
-        accessWideners.from(file("src/main/remnant.accessWidener"))
 
         runs {
             server()
