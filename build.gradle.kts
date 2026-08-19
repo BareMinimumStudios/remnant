@@ -4,6 +4,12 @@ plugins {
     alias(libs.plugins.cloche)
 }
 
+buildscript {
+    dependencies {
+        classpath(kotlin("metadata-jvm", "2.4.0"))
+    }
+}
+
 group = "net.bms.remnant"
 version = "2.0.0-beta.5"
 
@@ -15,10 +21,8 @@ repositories {
     cloche {
         main()
         mavenFabric()
-        mavenForge()
         mavenNeoforgedMeta()
         mavenNeoforged()
-        mavenParchment()
     }
 
     maven("https://api.modrinth.com/maven")
@@ -27,7 +31,7 @@ repositories {
     maven("https://maven.ladysnake.org/releases")
     maven("https://maven.wispforest.io/releases")
     maven("https://maven.shedaniel.me/")
-    maven("https://thedarkcolour.github.io/KotlinForForge/")
+    maven("https://repo.nyon.dev/releases")
 }
 
 cloche {
@@ -54,15 +58,14 @@ cloche {
             official()
         }
 
-
         dependencies {
+
         }
     }
 
     fabric("fabric:1.21.1") {
         minecraftVersion = "1.21.1"
         loaderVersion = libs.versions.fabric.loader
-
 
         includedClient()
 
@@ -99,7 +102,6 @@ cloche {
     neoforge("neoforge:1.21.1") {
         minecraftVersion = "1.21.1"
         loaderVersion = libs.versions.neoforge.loader
-
 
         runs {
             server()
