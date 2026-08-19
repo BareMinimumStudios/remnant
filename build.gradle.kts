@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "net.bms.remnant"
-version = "1.0.0"
+version = "2.0.0-beta.5"
 
 repositories {
     cloche.librariesMinecraft()

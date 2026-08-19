@@ -31,7 +31,7 @@
 
 ### Preamble 📝
 
-Remnant was developed in mind to have **persistent leaderboards** for servers for their offline players.
+Remnant (formerly Offline Player Cache) was developed in mind to have **persistent leaderboards** for servers for their offline players.
 
 ### Content 📦
 Modders may register `Record`'s linked with an id and a `Codec` to serialize/deserialize it.
