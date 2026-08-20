@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
+        java: [21]
         changelog: [CHANGELOG.md]
         minecraft_version: [1.21.1]
         modrinth: [oLPaySSb]
@@ -17,8 +18,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: |
-            21
+          java-version: ${{ matrix.java }}
           cache: gradle
 
       - name: Build
@@ -42,6 +42,8 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           github-token: ${{ secrets.REPOSITORY_TOKEN }}
+          github-tag: ${{ steps.meta.outputs.version }}
+          github-commitish: ${{ steps.meta.outputs.version }}
 
           files: build/libs/*-fabric-(${{ matrix.minecraft_version }}).jar
           github-files: |
@@ -58,6 +60,8 @@ jobs:
             quilt
             fabric
 
+          java: ${{ matrix.java }}
+
       - name: publish (neoforge)
         uses: Kir-Antipov/mc-publish@v3.3
         with:
@@ -70,6 +74,8 @@ jobs:
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
 
           github-token: ${{ secrets.REPOSITORY_TOKEN }}
+          github-tag: ${{ steps.meta.outputs.version }}
+          github-commitish: ${{ steps.meta.outputs.version }}
 
           files: build/libs/*-neoforge-(${{ matrix.minecraft_version }}).jar
           github-files: |
@@ -84,3 +90,5 @@ jobs:
 
           loaders: |
             neoforge
+
+          java: ${{ matrix.java }}
