@@ -1,28 +1,29 @@
-plugins {
-    `maven-publish`
-    kotlin("jvm") version libs.versions.kotlin
-    alias(libs.plugins.cloche)
-}
-
 buildscript {
     dependencies {
         classpath(kotlin("metadata-jvm", "2.4.0"))
     }
 }
 
+plugins {
+    `maven-publish`
+    kotlin("jvm") version libs.versions.kotlin
+    alias(libs.plugins.cloche)
+}
+
 group = "net.bms.remnant"
 version = "2.0.0-beta.5"
 
 repositories {
-    cloche.librariesMinecraft()
-
     mavenCentral()
 
     cloche {
+        librariesMinecraft()
         main()
         mavenFabric()
+        mavenForge()
         mavenNeoforgedMeta()
         mavenNeoforged()
+        mavenParchment()
     }
 
     maven("https://api.modrinth.com/maven")
@@ -31,7 +32,7 @@ repositories {
     maven("https://maven.ladysnake.org/releases")
     maven("https://maven.wispforest.io/releases")
     maven("https://maven.shedaniel.me/")
-    maven("https://repo.nyon.dev/releases")
+    maven("https://thedarkcolour.github.io/KotlinForForge/")
 }
 
 cloche {
@@ -56,6 +57,7 @@ cloche {
     common {
         mappings {
             official()
+            parchment(libs.versions.parchment)
         }
 
         dependencies {

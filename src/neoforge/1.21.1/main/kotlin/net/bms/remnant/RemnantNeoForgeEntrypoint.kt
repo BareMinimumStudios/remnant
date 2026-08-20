@@ -7,12 +7,14 @@ import net.neoforged.bus.api.EventPriority
 import net.neoforged.bus.api.SubscribeEvent
 import net.neoforged.fml.common.EventBusSubscriber
 import net.neoforged.fml.common.Mod
+
 import net.neoforged.neoforge.event.RegisterCommandsEvent
 import net.neoforged.neoforge.event.entity.player.PlayerEvent
+
 import thedarkcolour.kotlinforforge.neoforge.forge.FORGE_BUS
 import thedarkcolour.kotlinforforge.neoforge.forge.runForDist
 
-@Mod("remnant", dist = [Dist.DEDICATED_SERVER])
+@Mod("remnant")
 @EventBusSubscriber
 object RemnantNeoForgeEntrypoint {
     init {

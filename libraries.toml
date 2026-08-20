@@ -4,8 +4,9 @@
 # 📦 ~ dependencies
 cloche = "0.19.6"
 kotlin = "2.4.10"
+parchment = "2024.11.17"
 fabric-language-kotlin = "1.13.13+kotlin.2.4.10"
-neoforge-language-kotlin = "2.12.2-k2.4.10-3.0+neoforge"
+neoforge-language-kotlin = "5.11.0"
 
 # 🛟 ~ loaders
 fabric-loader = "0.19.3"
@@ -21,4 +22,4 @@ cloche = { id = "earth.terrarium.cloche", version.ref = "cloche" }
 
 [libraries]
 fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-language-kotlin" }
-neoforge-language-kotlin = { module = "dev.nyon:KotlinLangForge", version.ref = "neoforge-language-kotlin" }
+neoforge-language-kotlin = { module = "thedarkcolour:kotlinforforge-neoforge", version.ref = "neoforge-language-kotlin" }

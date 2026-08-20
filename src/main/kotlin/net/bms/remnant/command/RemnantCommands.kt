@@ -58,6 +58,12 @@ object RemnantCommands {
                 )
             )
             .then(
+                Commands.literal("keys").executes(::executeGetKeys)
+            )
+            .then(
+                Commands.literal("players").executes(::executeGetPlayers)
+            )
+            .then(
                 Commands.literal("remove").then(
                     Commands.literal("name").then(
                         Commands.argument("name", StringArgumentType.string()).suggests(RemnantCommandSuggestions.Names)
@@ -182,6 +188,31 @@ object RemnantCommands {
         return 1;
     }
 
+    private fun executeGetPlayers(ctx: CommandContext<CommandSourceStack>): Int {
+        val server = ctx.source.server
+
+        ctx.source.sendSuccess({ Component.literal("Listing Offline Players [${PlayerLedger.registeredKeys.size}]:").withStyle(ChatFormatting.BOLD) }, false)
+        PlayerLedger.getOfflinePlayers(server).forEach { offlinePlayer ->
+            ctx.source.sendSuccess({ Component.literal("${offlinePlayer.name} [${offlinePlayer.keys().size} keys]") }, false)
+        }
+
+        return 1
+    }
+
+    private fun executeGetKeys(ctx: CommandContext<CommandSourceStack>): Int {
+        if (PlayerLedger.registeredKeys.isEmpty()) {
+            ctx.source.sendSuccess({ Component.literal("There is no registered keys currently in the cache.") }, false)
+        }
+        else {
+            ctx.source.sendSuccess({ Component.literal("Registered Keys [${PlayerLedger.registeredKeys.size}]:").withStyle(ChatFormatting.BOLD) }, false)
+            PlayerLedger.registeredKeys.forEach { (location, key) ->
+                ctx.source.sendSuccess({ Component.literal("$location :: ${key.javaClass}") }, false)
+            }
+        }
+
+        return 1
+    }
+
     private fun <T> executeRemoveKey(ctx: CommandContext<CommandSourceStack>, input: (CommandContext<CommandSourceStack>) -> T): Int {
         val id = input(ctx)
         val identifier = ResourceLocationArgument.getId(ctx, "key")
@@ -254,6 +285,6 @@ object RemnantCommands {
 
     private fun <T> fetchingMessage(id: T): () -> MutableComponent = { Component.literal("Fetching: $id").withStyle(
         ChatFormatting.GOLD) }
-    private fun <T> nullKeyMessage(id: T): () -> MutableComponent = { Component.literal("$id -> <null_key>").withStyle(
+    private fun <T> nullKeyMessage(id: T): () -> MutableComponent = { Component.literal("There is no existing key for ($id) with the provided query.").withStyle(
         ChatFormatting.RED) }
 }

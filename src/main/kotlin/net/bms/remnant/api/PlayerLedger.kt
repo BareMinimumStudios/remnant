@@ -7,10 +7,10 @@ import com.mojang.serialization.Codec
 import net.bms.remnant.cache.LedgerCache
 import net.bms.remnant.player.OfflinePlayer
 import net.minecraft.resources.ResourceLocation
-import net.minecraft.server.MinecraftServer
 import net.minecraft.world.entity.player.Player
 import org.jetbrains.annotations.ApiStatus
 import net.bms.remnant.player.LedgerPlayer
+import net.minecraft.server.MinecraftServer
 import java.util.UUID
 
 typealias PlayerSerializer<R> = (Player) -> R
@@ -51,6 +51,7 @@ object PlayerLedger {
     /**
      * Gets the currently cached entry related to this player by the unique identifier of a user.
      *
+     * @param server A logical [MinecraftServer].
      * @param uuid The [UUID] used for the lookup operation for the player.
      *
      * @return [LedgerPlayer] A sealed-class implementation that provide an [OfflinePlayer] if that player is offline, and an [Player] if online.
@@ -74,6 +75,7 @@ object PlayerLedger {
     /**
      * Gets the currently cached entry related to this player by the unique identifier of a user.
      *
+     * @param server A logical [MinecraftServer].
      * @param username The username used for the lookup operation for the player.
      *
      * @return [LedgerPlayer] A sealed-class implementation that provide an [OfflinePlayer] if that player is offline, and an [Player] if online.
@@ -97,7 +99,8 @@ object PlayerLedger {
     /**
      * Gets the currently cached entry related to this player by the unique username of a user.
      *
-     * @param username The [GameProfile.getName] used for the lookup operation for the cached [OfflinePlayer].
+     * @param server A logical [MinecraftServer].
+     * @param uuid The [UUID] used for the lookup operation for the cached [OfflinePlayer].
      *
      * @return [OfflinePlayer] A pseudo-class of [Player] that is an offline 'entity'.
      */
@@ -112,6 +115,7 @@ object PlayerLedger {
     /**
      * Gets the currently cached entry related to this player by the unique username of a user.
      *
+     * @param server A logical [MinecraftServer].
      * @param username The [GameProfile.getName] used for the lookup operation for the cached [OfflinePlayer].
      *
      * @return [OfflinePlayer] A pseudo-class of [Player] that is an offline 'entity'.
@@ -122,5 +126,19 @@ object PlayerLedger {
         val cache = ledger.getPlayerCache(username)
         return if (cache != null) OfflinePlayer(server, cache, GameProfile(ledger.getUUIDFromUsername(username), username))
         else null
+    }
+
+    /**
+     * All offline player records currently in the cache.
+     *
+     * @param server A logical [MinecraftServer].
+     *
+     * @return [OfflinePlayer] A pseudo-class of [Player] that is an offline 'entity'.
+     */
+    @JvmStatic
+    fun getOfflinePlayers(server: MinecraftServer): Collection<OfflinePlayer> {
+        return LedgerCache.getOrCreate(server).playerCache.keys.map {
+            uuid -> getOfflinePlayer(server, uuid) ?: throw IllegalStateException("failed to get offline player with uuid: $uuid")
+        }
     }
 }
