@@ -1,25 +1,37 @@
-![Offline Player Cache Banner](https://cdn.modrinth.com/data/cached_images/8bf7b045806b81dba417cabafe08bed2d4fd4a1c.png)
-[![GitHub license](https://img.shields.io/badge/MIT-MIT?style=for-the-badge&label=LICENCE&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fblob%2F1.20.1%2Fmain%2FLICENSE)](https://github.com/PlayerEXDirectorsCut/offline-player-cache/blob/1.20.1/main/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/PlayerEXDirectorsCut/offline-player-cache?style=for-the-badge&logo=github&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fstargazers
-)](https://github.com/PlayerEXDirectorsCut/offline-player-cache/stargazers)
-[![GitHub forks](https://img.shields.io/github/forks/PlayerEXDirectorsCut/offline-player-cache?style=for-the-badge&logo=github&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fforks
-)](https://github.com/PlayerEXDirectorsCut/offline-player-cache/forks)
-[![GitHub issues](https://img.shields.io/github/issues/PlayerEXDirectorsCut/offline-player-cache?style=for-the-badge&logo=github&label=ISSUES&labelColor=1A1A1A&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fissues
-)](https://github.com/PlayerEXDirectorsCut/offline-player-cache/issues)
+![Remnant Banner](https://cdn.modrinth.com/data/cached_images/38a9b779772577bb5924af170e38f9cb1e313855.png)
 
-[![docs](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/generic_vector.svg)](https://playerexdirectorscut.github.io/Bare-Minimum-Docs/)
-![mkdocs](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/built-with/mkdocs_vector.svg)
-![java](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/built-with/java_vector.svg)
-[![curseforge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/opc-directors-cut)
-[![modrinth](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg)](https://modrinth.com/mod/opc-directors-cut)
+<p style="text-align: center">
+    <img href="https://github.com/PlayerEXDirectorsCut/offline-player-cache/blob/1.20.1/main/LICENSE" src="https://img.shields.io/badge/MIT-MIT?style=for-the-badge&label=LICENCE&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fblob%2F1.20.1%2Fmain%2FLICENSE">
+    <img href="https://github.com/PlayerEXDirectorsCut/offline-player-cache/stargazers" src="https://img.shields.io/github/stars/PlayerEXDirectorsCut/offline-player-cache?style=for-the-badge&logo=github&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fstargazers">
+    <img href="https://github.com/PlayerEXDirectorsCut/offline-player-cache/forks" src="https://img.shields.io/github/forks/PlayerEXDirectorsCut/offline-player-cache?style=for-the-badge&logo=github&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fforks">
+    <img href="https://github.com/PlayerEXDirectorsCut/offline-player-cache/issues" src="https://img.shields.io/github/issues/BareMinimumStudios/offline-player-cache?style=for-the-badge&logo=github&label=ISSUES&link=https%3A%2F%2Fgithub.com%2FBareMinimumStudios%2Foffline-player-cache%2Fissues&labelColor=1A1A1A">  
+</p>
 
-![fabric](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg)
-![quilt](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/quilt_vector.svg)
+<p style="text-align: center">
+    <img alt="fabric" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg">
+    <img alt="quilt" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/quilt_vector.svg">
+    <img alt="forge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/forge_vector.svg">
+</p>
+
+<p style="text-align: center">
+    <a href="https://bareminimumstudios.github.io/Bare-Minimum-Docs/">
+        <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/generic_vector.svg">
+    </a>
+    <a href="https://github.com/BareMinimumStudios/offline-player-cache">
+        <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg">
+    </a>
+    <img alt="java" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/built-with/java_vector.svg">
+    <img alt="gradle" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/built-with/gradle_vector.svg">
+    <a href="https://discord.gg/pcRw79hwey">
+        <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_vector.svg">
+    </a>
+</p>
+
+---
 
 ### Preamble 📝
 
-**Offline Player Cache: Directors Cut** has been completely redone from the ground up, and its framework predates `1.*` and below.
-This was developed in mind to have **persistent leaderboards** for servers for their offline players.
+Remnant (formerly Offline Player Cache) was developed in mind to have **persistent leaderboards** for servers for their offline players.
 
 ### Content 📦
 Modders may register `Record`'s linked with an id and a `Codec` to serialize/deserialize it.
@@ -30,27 +42,27 @@ Upon a player's reconnection to the server, their cached data is deleted.
 
 ### Commands
 
-#### `/opc get <uuid>|<name> <key>`
+#### `/remnant get <uuid>|<name> <key>`
 Provides details about the current player value. If they are online, it will provide their **current** value, but if they are offline, it will provide their **cached** value.
 
-#### `/opc remove <uuid>|<name> <key>`
+#### `/remnant remove <uuid>|<name> <key>`
 If the player with the associated username or UUID is offline, it will remove that players **cached** value based on the selected key.
 If the player is **online**, nothing will occur with this command.
 
-#### `/opc list <uuid>|<name>`
+#### `/remnant list <uuid>|<name>`
 Lists all the keys and values this player has stored if they are offline, or if they are online, their current ones.
 
 ## Developers Guide
 
 ### Setup
-Offline Player Cache has a [**Modrinth**](https://modrinth.com/mod/opc-directors-cut) and [**Curseforge**](https://curseforge.com/minecraft/mc-mods/opc-directors-cut) page.
+Remnant has a [**Modrinth**](https://modrinth.com/mod/opc-directors-cut) and [**Curseforge**](https://curseforge.com/minecraft/mc-mods/opc-directors-cut) page.
 
 In order to develop with the API, please add the following:
 
 **`gradle.properties`**
 
 ```properties
-opc_version=...
+remnant_version=...
 ```
 
 **`build.gradle`**
@@ -67,9 +79,9 @@ repositories {
 }
 
 dependencies {
-    modImplementation "maven.modrinth:opc-directors-cut:${project.opc_version}"
+    modImplementation "maven.modrinth:opc-directors-cut:${project.remnant_version}"
     // include this if you do not want to force your users to install the mod.
-    include "maven.modrinth:opc-directors-cut:${project.opc_version}"
+    include "maven.modrinth:opc-directors-cut:${project.remnant_version}"
 }
 ```
 
@@ -89,47 +101,60 @@ repositories {
 }
 
 dependencies {
-    modImplementation("maven.modrinth:opc-directors-cut:${properties["opc_version"]}")
+    modImplementation("maven.modrinth:opc-directors-cut:${properties["remnant_version"]}")
     // include this if you do not want to force your users to install the mod.
-    include("maven.modrinth:opc-directors-cut:${properties["opc_version"]}")
+    include("maven.modrinth:opc-directors-cut:${properties["remnant_version"]}")
 }
 ```
 
 </details>
 
-### Migration to 2.0.0
+## Migration to `2.*`
 
-- A considerable amount of internal and external changes have happened with the mod (again).
-- It's record based, so you are able to register any `Record` with an associated identifier.
-- More docs coming soon...
+- There are no longer any concepts of keys. Instead, you are to register an id, a `Record`, and a `Codec`.
 
-### Using the Cache API
-- In order to utilize the cache, utilize the new `OfflinePlayerCacheAPI`, which will allow you to register `CachedPlayerKeys` to the cache, and permit you to obtain data based on the keys provided.
+### Creating a Record
 
-### Registering & Using Keys
+```java
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 
-```kotlin
-val LEVEL_KEY = ResourceLocation.tryBuild("opc", "level")!!
-
-@JvmRecord
-data class Level(val level: Int) {
-    companion object {
-        val CODEC: Codec<Level> = RecordCodecBuilder.create {
-            it.group(Codec.INT.fieldOf("level").forGetter(Level::level)).apply(it, ::Level)
-        }
-    }
-}
-
-// static init
-init {
-    OfflinePlayerCacheAPI.register(LEVEL_KEY, TestingKeys.Level::class.java, TestingKeys.Level.CODEC) { player ->
-        TestingKeys.Level(player.experienceLevel)
-    }
+public record Contract(String label, boolean signed) {
+    public static Codec<Contract> CODEC = RecordCodecBuilder.create((instance) ->
+        instance.group(
+            Codec.STRING.fieldOf("label").forGetter(Contract::label),
+            Codec.BOOL.fieldOf("signed").forGetter(Contract::signed)
+        ).apply(instance, Contract::new)
+    );
 }
 ```
-Once your key is registered, you are good to go!
 
-Keys will automatically be managed by the cache, and you should be able to see these keys through the commands we provide.
+### Registering
+
+```java
+import maven_group.modid.concept.Contract; // Контракт :)
+
+// somewhere during static/mod initialization
+private void init() {
+    OfflinePlayerCacheAPI.register(CONTRACT_RECORD_ID, Contract.class, Contract.CODEC, (Player player) -> {
+        // within this block, you decide how to translate a player's data to the Record you chose.
+        return new Contract(player.getName() + ":contracted", true);
+    });
+}
+
+```
+
+### Obtaining
+
+```java
+var cache = OfflinePlayerCacheAPI.getCache(server);
+cache.getEntry(Contract.class, "bibi_reden").ifPresent(contract -> {
+    // we now know that there is a valid Contract entry for this player.
+    // You can also use a UUID to fetch an entry as well.
+});
+```
+
+### A Special Thanks to our Sponsor
 
 ---
 
