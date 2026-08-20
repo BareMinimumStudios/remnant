@@ -21,6 +21,9 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: gradle
 
+      - name: gradlew chmod
+        run: chmod +x ./gradlew
+
       - name: Build
         run: ./gradlew build
 
