@@ -77,7 +77,7 @@ cloche {
         }
 
         dependencies {
-            fabricApi(libs.versions.fabric.api.get1211())
+            fabricApi(libs.versions.fabric.api)
 
             modImplementation(libs.fabric.language.kotlin)
         }
@@ -86,7 +86,7 @@ cloche {
             dependencies {
                 dependency {
                     modId = "fabric-api"
-                    version(libs.versions.fabric.api.get1211().get())
+                    version(libs.versions.fabric.api.get())
                 }
                 dependency {
                     modId = "fabric-language-kotlin"
