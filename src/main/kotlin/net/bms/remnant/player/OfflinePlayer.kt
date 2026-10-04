@@ -21,9 +21,10 @@ import java.io.FileOutputStream
  */
 @ApiStatus.AvailableSince("1.0")
 class OfflinePlayer(server: MinecraftServer, val ledger: PlayerLedgerEntry, profile: GameProfile) : Player(server.overworld(), BlockPos.ZERO, 0.0F, profile), AutoCloseable {
+    private val playerDataDirectory = server.getWorldPath(LevelResource.PLAYER_DATA_DIR).toFile()
+
     init {
-        val directory = server.getWorldPath(LevelResource.PLAYER_DATA_DIR).toFile()
-        val file = File(directory, "$stringUUID.dat")
+        val file = File(playerDataDirectory, "$stringUUID.dat")
 
         if (file.exists()) {
             try {
@@ -57,13 +58,9 @@ class OfflinePlayer(server: MinecraftServer, val ledger: PlayerLedgerEntry, prof
         return ledger.entries
     }
 
-    fun keys(): Collection<PlayerLedgerKey<*>> {
-        return ledger.keys.toList()
-    }
+    fun keys(): Collection<PlayerLedgerKey<*>> = ledger.keys
 
-    fun values(): Collection<Record> {
-        return ledger.values.toList()
-    }
+    fun values(): Collection<Record> = ledger.values
 
     override fun isSpectator(): Boolean = false
 
@@ -72,23 +69,21 @@ class OfflinePlayer(server: MinecraftServer, val ledger: PlayerLedgerEntry, prof
     override fun close() {
         // override a save into uuid.dat
 
-        val directory = server?.getWorldPath(LevelResource.PLAYER_DATA_DIR)?.toFile()
-
         try {
-            val file = File.createTempFile("${stringUUID}.tmp", ".dat", directory)
+            val file = File.createTempFile("${stringUUID}.tmp", ".dat", playerDataDirectory)
 
             FileOutputStream(file).use {
                 val tag = saveWithoutId(CompoundTag())
                 NbtIo.writeCompressed(tag, it)
             }
 
-            val outbound = File(directory, "${stringUUID}.dat")
-            val inbound = File(directory, "${stringUUID}.dat_old")
+            val outbound = File(playerDataDirectory, "${stringUUID}.dat")
+            val inbound = File(playerDataDirectory, "${stringUUID}.dat_old")
 
             Util.safeReplaceFile(outbound.toPath(), file.toPath(), inbound.toPath())
         }
         catch (why: Exception) {
-            Remnant.LOGGER.warn("Could not write to player-directory: $directory, cause: ${why.message}")
+            Remnant.LOGGER.warn("Could not write offline player data to: $playerDataDirectory", why)
         }
     }
 }

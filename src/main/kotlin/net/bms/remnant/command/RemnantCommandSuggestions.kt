@@ -12,14 +12,24 @@ object RemnantCommandSuggestions {
         SharedSuggestionProvider.suggestResource(PlayerLedger.registeredKeys.keys, builder)
         builder.buildFuture()
     }
+
     @JvmStatic
     val Names = SuggestionProvider<CommandSourceStack> { ctx, builder ->
-        LedgerCache.getOrCreate(ctx.source.server).usernames.forEach(builder::suggest)
+        val names = buildSet {
+            addAll(LedgerCache.getOrCreate(ctx.source.server).usernames)
+            ctx.source.server.playerList.players.mapNotNullTo(this) { it.gameProfile.name }
+        }
+        SharedSuggestionProvider.suggest(names, builder)
         builder.buildFuture()
     }
+
     @JvmStatic
     val Uuids = SuggestionProvider<CommandSourceStack> { ctx, builder ->
-        LedgerCache.getOrCreate(ctx.source.server).uuids.forEach { builder.suggest(it.toString()) }
+        val uuids = buildSet {
+            addAll(LedgerCache.getOrCreate(ctx.source.server).uuids)
+            ctx.source.server.playerList.players.mapTo(this) { it.uuid }
+        }
+        uuids.forEach { builder.suggest(it.toString()) }
         builder.buildFuture()
     }
 }

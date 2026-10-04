@@ -2,6 +2,7 @@ package net.bms.remnant.api
 
 import com.google.common.collect.BiMap
 import com.google.common.collect.HashBiMap
+import com.google.common.collect.Maps
 import com.mojang.authlib.GameProfile
 import com.mojang.serialization.Codec
 import net.bms.remnant.cache.LedgerCache
@@ -22,9 +23,11 @@ typealias PlayerSerializer<R> = (Player) -> R
  */
 @ApiStatus.AvailableSince("1.0")
 object PlayerLedger {
-    /** The static registry of keys. Contains a view of what is currently registered in the API. */
+    private val mutableRegisteredKeys: BiMap<ResourceLocation, PlayerLedgerKey<out Record>> = HashBiMap.create()
+
+    /** Read-only view of all ledger keys currently registered with the API. */
     @JvmStatic
-    val registeredKeys: BiMap<ResourceLocation, PlayerLedgerKey<out Record>> = HashBiMap.create()
+    val registeredKeys: BiMap<ResourceLocation, PlayerLedgerKey<out Record>> = Maps.unmodifiableBiMap(mutableRegisteredKeys)
 
     /**
      * Register a [Record] key based on a given
@@ -39,14 +42,13 @@ object PlayerLedger {
      * @throws IllegalStateException If the given [id] is already registered.
      */
     @JvmStatic
-    inline fun <reified R : Record> register(id: ResourceLocation, codec: Codec<R>, noinline serializer: PlayerSerializer<R>): PlayerLedgerKey<R> {
+    fun <R : Record> register(id: ResourceLocation, codec: Codec<R>, serializer: PlayerSerializer<R>): PlayerLedgerKey<R> {
+        check(!mutableRegisteredKeys.containsKey(id)) { "A player ledger key is already registered for id '$id'." }
+
         val key = PlayerLedgerKey(id, codec, serializer)
-
-        registeredKeys.computeIfAbsent(id) { key }
-
+        mutableRegisteredKeys[id] = key
         return key
     }
-
 
     /**
      * Gets the currently cached entry related to this player by the unique identifier of a user.
@@ -58,18 +60,14 @@ object PlayerLedger {
      */
     @JvmStatic
     fun getPlayer(server: MinecraftServer, uuid: UUID): LedgerPlayer {
+        server.playerList.players.firstOrNull { it.uuid == uuid }?.let { player ->
+            return LedgerPlayer.Online(player)
+        }
+
         val ledger = LedgerCache.getOrCreate(server)
-        val cache = ledger.getPlayerCache(uuid)
-        return if (cache == null) {
-            // we will attempt to route to an existing player in the server, if there is none, then throw an exception!
-
-            val player = server.playerList.players.find { player -> player.gameProfile.id == uuid } ?: throw IllegalStateException("Player not found: $uuid")
-
-            LedgerPlayer.Online(player)
-        }
-        else {
-            LedgerPlayer.Offline(OfflinePlayer(server, cache, GameProfile(uuid, ledger.getUsernameFromUUID(uuid))))
-        }
+        val cache = ledger.getPlayerCache(uuid) ?: throw IllegalStateException("Player not found: $uuid")
+        val username = ledger.getUsernameFromUUID(uuid) ?: "unknown"
+        return LedgerPlayer.Offline(OfflinePlayer(server, cache, GameProfile(uuid, username)))
     }
 
     /**
@@ -82,18 +80,15 @@ object PlayerLedger {
      */
     @JvmStatic
     fun getPlayer(server: MinecraftServer, username: String): LedgerPlayer {
+        server.playerList.players.firstOrNull { it.gameProfile.name?.equals(username, ignoreCase = true) == true }?.let { player ->
+            return LedgerPlayer.Online(player)
+        }
+
         val ledger = LedgerCache.getOrCreate(server)
-        val cache = ledger.getPlayerCache(username)
-        return if (cache == null) {
-            // we will attempt to route to an existing player in the server, if there is none, then throw an exception!
-
-            val player = server.playerList.players.find { player -> player.gameProfile.name == username } ?: throw IllegalStateException("Player not found: $username")
-
-            LedgerPlayer.Online(player)
-        }
-        else {
-            LedgerPlayer.Offline(OfflinePlayer(server, cache, GameProfile(ledger.getUUIDFromUsername(username), username)))
-        }
+        val uuid = ledger.getUUIDFromUsername(username) ?: throw IllegalStateException("Player not found: $username")
+        val cache = ledger.getPlayerCache(uuid) ?: throw IllegalStateException("Player not found: $username")
+        val cachedUsername = ledger.getUsernameFromUUID(uuid) ?: username
+        return LedgerPlayer.Offline(OfflinePlayer(server, cache, GameProfile(uuid, cachedUsername)))
     }
 
     /**
@@ -107,9 +102,9 @@ object PlayerLedger {
     @JvmStatic
     fun getOfflinePlayer(server: MinecraftServer, uuid: UUID): OfflinePlayer? {
         val ledger = LedgerCache.getOrCreate(server)
-        val cache = ledger.getPlayerCache(uuid)
-        return if (cache != null) OfflinePlayer(server, cache, GameProfile(uuid, ledger.getUsernameFromUUID(uuid)))
-        else null
+        val cache = ledger.getPlayerCache(uuid) ?: return null
+        val username = ledger.getUsernameFromUUID(uuid) ?: "unknown"
+        return OfflinePlayer(server, cache, GameProfile(uuid, username))
     }
 
     /**
@@ -123,9 +118,10 @@ object PlayerLedger {
     @JvmStatic
     fun getOfflinePlayer(server: MinecraftServer, username: String): OfflinePlayer? {
         val ledger = LedgerCache.getOrCreate(server)
-        val cache = ledger.getPlayerCache(username)
-        return if (cache != null) OfflinePlayer(server, cache, GameProfile(ledger.getUUIDFromUsername(username), username))
-        else null
+        val uuid = ledger.getUUIDFromUsername(username) ?: return null
+        val cache = ledger.getPlayerCache(uuid) ?: return null
+        val cachedUsername = ledger.getUsernameFromUUID(uuid) ?: username
+        return OfflinePlayer(server, cache, GameProfile(uuid, cachedUsername))
     }
 
     /**
@@ -137,8 +133,8 @@ object PlayerLedger {
      */
     @JvmStatic
     fun getOfflinePlayers(server: MinecraftServer): Collection<OfflinePlayer> {
-        return LedgerCache.getOrCreate(server).playerCache.keys.map {
-            uuid -> getOfflinePlayer(server, uuid) ?: throw IllegalStateException("failed to get offline player with uuid: $uuid")
+        return LedgerCache.getOrCreate(server).uuids.mapNotNull { uuid ->
+            getOfflinePlayer(server, uuid)
         }
     }
 }

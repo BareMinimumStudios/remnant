@@ -9,7 +9,7 @@ import net.bms.remnant.command.RemnantCommands
 class RemnantFabricEntrypoint : ModInitializer {
     override fun onInitialize() {
         Remnant.init()
-        
+
         CommandRegistrationCallback.EVENT.register { dispatcher, _, _ ->
             RemnantCommands.register(dispatcher)
         }

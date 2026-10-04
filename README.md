@@ -1,126 +1,67 @@
-![Remnant Banner](https://cdn.modrinth.com/data/cached_images/38a9b779772577bb5924af170e38f9cb1e313855.png)
+# Remnant
 
-<p style="text-align: center">
-    <img href="https://github.com/PlayerEXDirectorsCut/offline-player-cache/blob/1.20.1/main/LICENSE" src="https://img.shields.io/badge/MIT-MIT?style=for-the-badge&label=LICENCE&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fblob%2F1.20.1%2Fmain%2FLICENSE">
-    <img href="https://github.com/PlayerEXDirectorsCut/offline-player-cache/stargazers" src="https://img.shields.io/github/stars/PlayerEXDirectorsCut/offline-player-cache?style=for-the-badge&logo=github&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fstargazers">
-    <img href="https://github.com/PlayerEXDirectorsCut/offline-player-cache/forks" src="https://img.shields.io/github/forks/PlayerEXDirectorsCut/offline-player-cache?style=for-the-badge&logo=github&labelColor=1A1A1A&color=FFFFFF&link=https%3A%2F%2Fgithub.com%2FPlayerEXDirectorsCut%2Foffline-player-cache%2Fforks">
-    <img href="https://github.com/PlayerEXDirectorsCut/offline-player-cache/issues" src="https://img.shields.io/github/issues/BareMinimumStudios/offline-player-cache?style=for-the-badge&logo=github&label=ISSUES&link=https%3A%2F%2Fgithub.com%2FBareMinimumStudios%2Foffline-player-cache%2Fissues&labelColor=1A1A1A">  
-</p>
+Remnant is a small server-side API/library for **Minecraft 1.21.1** that lets mods register player data which is snapshotted when a player disconnects and remains queryable while that player is offline.
 
-<p style="text-align: center">
-    <img alt="fabric" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg">
-    <img alt="quilt" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/quilt_vector.svg">
-    <img alt="forge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/forge_vector.svg">
-</p>
+The 1.21.1 branch is written in Kotlin and targets both **Fabric** and **NeoForge** from one Cloche project.
 
-<p style="text-align: center">
-    <a href="https://bareminimumstudios.github.io/Bare-Minimum-Docs/">
-        <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/generic_vector.svg">
-    </a>
-    <a href="https://github.com/BareMinimumStudios/offline-player-cache">
-        <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg">
-    </a>
-    <img alt="java" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/built-with/java_vector.svg">
-    <img alt="gradle" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/built-with/gradle_vector.svg">
-    <a href="https://discord.gg/pcRw79hwey">
-        <img src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/social/discord-plural_vector.svg">
-    </a>
-</p>
+## Platform support
 
----
+| Platform | Minecraft | Runtime dependency |
+| --- | --- | --- |
+| Fabric | 1.21.1 | Fabric API, Fabric Language Kotlin |
+| NeoForge | 1.21.1 | Kotlin for Forge |
 
-### Preamble 📝
+Java 21 is required.
 
-Remnant (formerly Offline Player Cache) was developed in mind to have **persistent leaderboards** for servers for their offline players.
+## How the cache works
 
-### Content 📦
-Modders may register `Record`'s linked with an id and a `Codec` to serialize/deserialize it.
+Integrating mods register a `PlayerLedgerKey` with:
 
-Upon a player's disconnection from the server, their cached data is stored into the servers `level` data, which then can be accessed through code or through the commands the mod provides.
+- a `ResourceLocation` id;
+- a Mojang `Codec` used to persist the value;
+- a serializer which reads the live `Player` and produces the registered value.
 
-Upon a player's reconnection to the server, their cached data is deleted.
+When a player disconnects, Remnant evaluates every registered serializer and writes the resulting ledger snapshot to world `SavedData`. When that player reconnects, the offline snapshot is removed so online reads come from the live player instead of stale cached data.
 
-### Commands
+A failure in one registered serializer is logged and no longer prevents the remaining keys from being cached.
 
-#### `/remnant get <uuid>|<name> <key>`
-Provides details about the current player value. If they are online, it will provide their **current** value, but if they are offline, it will provide their **cached** value.
+## Commands
 
-#### `/remnant remove <uuid>|<name> <key>`
-If the player with the associated username or UUID is offline, it will remove that players **cached** value based on the selected key.
-If the player is **online**, nothing will occur with this command.
+All Remnant administration commands require permission level 2.
 
-#### `/remnant list <uuid>|<name>`
-Lists all the keys and values this player has stored if they are offline, or if they are online, their current ones.
+```text
+/remnant keys
+/remnant players
 
-## Developers Guide
+/remnant get name <name> <key>
+/remnant get uuid <uuid> <key>
 
-### Setup
-Remnant has a [**Modrinth**](https://modrinth.com/mod/opc-directors-cut) and [**Curseforge**](https://curseforge.com/minecraft/mc-mods/opc-directors-cut) page.
+/remnant list name <name>
+/remnant list uuid <uuid>
 
-In order to develop with the API, please add the following:
+/remnant remove name <name> <key>
+/remnant remove uuid <uuid> <key>
 
-**`gradle.properties`**
-
-```properties
-remnant_version=...
+/remnant clear name <name>
+/remnant clear uuid <uuid>
 ```
 
-**`build.gradle`**
+`get` and `list` work with both online and offline players. Online values are serialized from the current player; offline values come from the saved ledger snapshot.
 
-```groovy
-repositories {
-    maven {
-        name = "Modrinth"
-        url = "https://api.modrinth.com/maven"
-        content {
-            includeGroup "maven.modrinth"
-        }
-    }
-}
+`remove` and `clear` only modify offline cache data. `players` lists cached offline players and the number of registered values stored for each one.
 
-dependencies {
-    modImplementation "maven.modrinth:opc-directors-cut:${project.remnant_version}"
-    // include this if you do not want to force your users to install the mod.
-    include "maven.modrinth:opc-directors-cut:${project.remnant_version}"
-}
-```
+## Developer API
 
-<details><summary>Alternatively, if you are using Kotlin DSL:</summary>
-    
-**`build.gradle.kts`**
+### Register a ledger value
 
-```kotlin
-repositories {
-    maven {
-        name = "Modrinth"
-        url = uri("https://api.modrinth.com/maven")
-        content {
-            includeGroup("maven.modrinth")
-        }
-    }
-}
-
-dependencies {
-    modImplementation("maven.modrinth:opc-directors-cut:${properties["remnant_version"]}")
-    // include this if you do not want to force your users to install the mod.
-    include("maven.modrinth:opc-directors-cut:${properties["remnant_version"]}")
-}
-```
-
-</details>
-
-## Migration to `2.*`
-
-- There are no longer any concepts of keys. Instead, you are to register an id, a `Record`, and a `Codec`.
-
-### Creating a Record
+Remnant 2.x currently stores payloads as Java `Record` values. A small record and codec can look like this:
 
 ```java
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 public record Contract(String label, boolean signed) {
-    public static Codec<Contract> CODEC = RecordCodecBuilder.create((instance) ->
+    public static final Codec<Contract> CODEC = RecordCodecBuilder.create(instance ->
         instance.group(
             Codec.STRING.fieldOf("label").forGetter(Contract::label),
             Codec.BOOL.fieldOf("signed").forGetter(Contract::signed)
@@ -129,34 +70,90 @@ public record Contract(String label, boolean signed) {
 }
 ```
 
-### Registering
+Register the value during normal mod initialization:
 
 ```java
-import maven_group.modid.concept.Contract; // Контракт :)
+import net.bms.remnant.api.PlayerLedger;
+import net.bms.remnant.api.PlayerLedgerKey;
+import net.minecraft.resources.ResourceLocation;
 
-// somewhere during static/mod initialization
-private void init() {
-    OfflinePlayerCacheAPI.register(CONTRACT_RECORD_ID, Contract.class, Contract.CODEC, (Player player) -> {
-        // within this block, you decide how to translate a player's data to the Record you chose.
-        return new Contract(player.getName() + ":contracted", true);
-    });
+public static final PlayerLedgerKey<Contract> CONTRACT = PlayerLedger.register(
+    ResourceLocation.fromNamespaceAndPath("example", "contract"),
+    Contract.CODEC,
+    player -> new Contract(player.getName().getString(), true)
+);
+```
+
+Duplicate ids are rejected during registration.
+
+### Read a player
+
+```java
+import net.bms.remnant.api.PlayerLedger;
+import net.bms.remnant.player.LedgerPlayer;
+
+LedgerPlayer player = PlayerLedger.getPlayer(server, uuid);
+
+if (player instanceof LedgerPlayer.Offline offline) {
+    Contract contract = offline.getPlayer().entry(CONTRACT);
+}
+```
+
+`PlayerLedger.getPlayer(...)` returns a live `LedgerPlayer.Online` when the player is connected and a `LedgerPlayer.Offline` when an offline snapshot exists. It throws when neither can be found. `getOfflinePlayer(...)` is available when only an offline result is wanted.
+
+### Maven consumption
+
+Published Remnant files are available through the project pages on [Modrinth](https://modrinth.com/mod/opc-directors-cut) and [CurseForge](https://www.curseforge.com/minecraft/mc-mods/opc-directors-cut).
+
+For projects that consume Modrinth Maven artifacts directly:
+
+```kotlin
+repositories {
+    exclusiveContent {
+        forRepository {
+            maven("https://api.modrinth.com/maven")
+        }
+        filter {
+            includeGroup("maven.modrinth")
+        }
+    }
 }
 
+dependencies {
+    // Use the dependency configuration appropriate for your loader/toolchain.
+    implementation("maven.modrinth:opc-directors-cut:<version>")
+}
 ```
 
-### Obtaining
+## Building
 
-```java
-var cache = OfflinePlayerCacheAPI.getCache(server);
-cache.getEntry(Contract.class, "bibi_reden").ifPresent(contract -> {
-    // we now know that there is a valid Contract entry for this player.
-    // You can also use a UUID to fetch an entry as well.
-});
+```bash
+./gradlew clean build
 ```
 
-### A Special Thanks to our Sponsor
+Release jars are produced for both loader targets. The project uses Java 21, Kotlin, and Cloche.
 
----
+## Publishing
 
-<p><img src="https://i.imgur.com/V38aMzY.png" alt="Sponsor Banner"/></p>
-<p><b>Use code &quot;BAREMINIMUM&quot; to get 15% off your first month!</b></p>
+Publishing is handled by `.github/workflows/publish.yml` using `Kira-NT/mc-publish`.
+
+The repository needs these Actions secrets:
+
+- `MODRINTH_TOKEN`
+- `CURSEFORGE_TOKEN`
+
+GitHub Releases use the workflow-provided `GITHUB_TOKEN`; a separate personal access token is not required.
+
+For a normal tagged release:
+
+1. Set `mod_version` in `gradle.properties`.
+2. Commit the version/changelog changes.
+3. Push a matching tag such as `v2.0.0-beta.5`.
+
+The workflow verifies that the tag matches `mod_version`, builds both loader jars once, verifies that exactly one Fabric and one NeoForge release artifact exist, and uploads those jars as a short-lived Actions artifact. Independent jobs then publish Fabric/NeoForge to Modrinth and CurseForge and create one GitHub Release containing both jars.
+
+Keeping each destination in its own job is intentional: if one upload fails after another succeeds, GitHub can re-run only the failed job instead of trying to recreate an already-published Modrinth/CurseForge version. The workflow can also be started manually with `workflow_dispatch`; choose the specific failed destination for recovery rather than `all` when part of a release already succeeded.
+
+## License
+
+Remnant is licensed under the **Bare Minimum License (BML) v1.0**. See [`LICENSE`](LICENSE) for the complete terms.

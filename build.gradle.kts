@@ -1,17 +1,10 @@
-buildscript {
-    dependencies {
-        classpath(kotlin("metadata-jvm", "2.4.0"))
-    }
-}
-
 plugins {
-    `maven-publish`
     kotlin("jvm") version libs.versions.kotlin
     alias(libs.plugins.cloche)
 }
 
-group = "net.bms.remnant"
-version = "2.0.0-beta.5"
+group = providers.gradleProperty("maven_group").get()
+version = providers.gradleProperty("mod_version").get()
 
 repositories {
     mavenCentral()
@@ -20,26 +13,23 @@ repositories {
         librariesMinecraft()
         main()
         mavenFabric()
-        mavenForge()
         mavenNeoforgedMeta()
         mavenNeoforged()
         mavenParchment()
     }
 
-    maven("https://api.modrinth.com/maven")
-    maven("https://maven.nucleoid.xyz")
-    maven("https://maven.terraformersmc.com/")
-    maven("https://maven.ladysnake.org/releases")
-    maven("https://maven.wispforest.io/releases")
-    maven("https://maven.shedaniel.me/")
-    maven("https://thedarkcolour.github.io/KotlinForForge/")
+    maven("https://thedarkcolour.github.io/KotlinForForge/") {
+        content {
+            includeGroup("thedarkcolour")
+        }
+    }
 }
 
 cloche {
     metadata {
         modId = "remnant"
-        name = "remnant"
-        description = "Allows the ability to cache player data to the server based on ledger keys."
+        name = "Remnant"
+        description = "Allows server-side caching and access to registered player data while players are offline."
         license = "BML-1.0"
 
         author {
@@ -47,9 +37,9 @@ cloche {
             contact = "https://github.com/karuzumi"
         }
 
-        url = "https://github.com/BareMinimumStudios/OfflinePlayerCache"
-        sources = "https://github.com/BareMinimumStudios/OfflinePlayerCache"
-        issues = "https://github.com/BareMinimumStudios/OfflinePlayerCache/issues"
+        url = "https://github.com/BareMinimumStudios/remnant"
+        sources = "https://github.com/BareMinimumStudios/remnant"
+        issues = "https://github.com/BareMinimumStudios/remnant/issues"
 
         icon = "assets/remnant/icon.png"
     }
@@ -58,10 +48,6 @@ cloche {
         mappings {
             official()
             parchment(libs.versions.parchment)
-        }
-
-        dependencies {
-
         }
     }
 
@@ -78,7 +64,6 @@ cloche {
 
         dependencies {
             fabricApi(libs.versions.fabric.api)
-
             modImplementation(libs.fabric.language.kotlin)
         }
 
@@ -131,7 +116,5 @@ cloche {
 }
 
 kotlin {
-    compilerOptions {
-        freeCompilerArgs = listOf("-Xmulti-platform", "-Xno-check-actual", "-Xexpect-actual-classes")
-    }
+    jvmToolchain(21)
 }
