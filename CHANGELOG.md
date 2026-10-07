@@ -39,7 +39,7 @@ Stable release for Minecraft 1.21.1 on Fabric and NeoForge. Remnant continues Of
 
 ### Fixed
 
-- Build-tool incompatibilities by aligning Gradle 9.2.1, Cloche 0.18.10, Kotlin 2.2.21, and matching Fabric Language Kotlin, with Kotlin 2.2 language/API output.
+- Build-tool incompatibilities by aligning Gradle 9.8.0, Cloche 0.18.10, Kotlin 2.2.21, and matching Fabric Language Kotlin, with Kotlin 2.2 language/API output.
 - Fabric dependency transforms running before their required mapping archive was generated.
 - Duplicate ledger registrations returning an unregistered key instead of rejecting the duplicate ID.
 - Offline player persistence using an unstable player-data directory when a player entry is closed.
