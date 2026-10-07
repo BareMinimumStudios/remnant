@@ -1,95 +1,339 @@
 name: publish
-on: [workflow_dispatch]
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "Destination to publish (use a specific target to recover a partial release)"
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - fabric-modrinth
+          - fabric-curseforge
+          - neoforge-modrinth
+          - neoforge-curseforge
+          - github
+
+permissions:
+  contents: read
+
+concurrency:
+  group: publish-${{ github.ref }}
+  cancel-in-progress: false
+
+env:
+  JAVA_VERSION: "21"
+  MINECRAFT_VERSION: "1.21.1"
+  MODRINTH_PROJECT_ID: "oLPaySSb"
+  CURSEFORGE_PROJECT_ID: "1019391"
+  RELEASE_ARTIFACT: "remnant-release-jars"
 
 jobs:
   build:
+    name: Build and validate release
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        java: [21]
-        changelog: [CHANGELOG.md]
-        minecraft_version: [1.21.1]
-        modrinth: [oLPaySSb]
-        curseforge: [1019391]
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
+      release_version: ${{ steps.meta.outputs.release_version }}
+
     steps:
-      - uses: actions/checkout@v6
-      - uses: actions/setup-java@v5
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Set up Java 21
+        uses: actions/setup-java@de7274f081f381c8f8158605e0321c36c376e2e6 # v6.0.1
         with:
           distribution: temurin
-          java-version: ${{ matrix.java }}
+          java-version: ${{ env.JAVA_VERSION }}
           cache: gradle
 
-      - name: gradlew chmod
+      - name: Make Gradle wrapper executable
         run: chmod +x ./gradlew
 
-      - name: Build
-        run: ./gradlew build
-
-      - name: Get mod metadata
+      - name: Read and validate version
         id: meta
+        shell: bash
         run: |
-          version=$(grep "version =" build.gradle.kts | cut -d'=' -f2 | cut -d'"' -f2 | tr -d '\n')
-          echo "version=$version" >> $GITHUB_OUTPUT
+          set -euo pipefail
+          version="$(sed -n 's/^mod_version=//p' gradle.properties | head -n 1 | tr -d '\r')"
+          if [[ -z "$version" ]]; then
+            echo "mod_version is missing from gradle.properties" >&2
+            exit 1
+          fi
 
-      - name: publish (fabric)
-        uses: Kir-Antipov/mc-publish@v3.3
+          release_version="${version}+${MINECRAFT_VERSION}"
+
+          if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
+            tag_version="${GITHUB_REF_NAME#v}"
+            if [[ "$tag_version" != "$release_version" ]]; then
+              echo "Tag version '$tag_version' does not match expected release version '$release_version'." >&2
+              echo "mod_version remains '$version'; Minecraft '$MINECRAFT_VERSION' is appended only to the public release name/tag." >&2
+              exit 1
+            fi
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "release_version=$release_version" >> "$GITHUB_OUTPUT"
+          echo "tag=v$release_version" >> "$GITHUB_OUTPUT"
+
+      - name: Build release artifacts
+        run: ./gradlew clean build --stacktrace
+
+      - name: Stage and verify release files
+        shell: bash
+        env:
+          MOD_VERSION: ${{ steps.meta.outputs.version }}
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          import os, re, shutil, zipfile, json
+          version = os.environ['MOD_VERSION']
+          mc = os.environ['MINECRAFT_VERSION']
+          dest = Path('build/release')
+          dest.mkdir(parents=True, exist_ok=True)
+          for loader in ('fabric', 'neoforge'):
+              matches = []
+              for jar in Path('build/libs').glob('*.jar'):
+                  with zipfile.ZipFile(jar) as z:
+                      if loader == 'fabric' and 'fabric.mod.json' in z.namelist():
+                          metadata = json.loads(z.read('fabric.mod.json'))
+                          if metadata.get('id') == 'remnant' and metadata.get('version') == version:
+                              matches.append(jar)
+                      elif loader == 'neoforge' and 'META-INF/neoforge.mods.toml' in z.namelist():
+                          import tomllib
+                          metadata = tomllib.loads(z.read('META-INF/neoforge.mods.toml').decode())
+                          if any(m.get('modId') == 'remnant' and m.get('version') == version for m in metadata.get('mods', [])):
+                              matches.append(jar)
+              if len(matches) != 1:
+                  raise SystemExit(f'Expected one verified {loader} release JAR; found {matches}')
+              target = dest / f'remnant-{version}+{mc}-{loader}.jar'
+              shutil.copy2(matches[0], target)
+              print(f'{matches[0]} -> {target}')
+          text = Path('CHANGELOG.md').read_text()
+          heading = re.search(r'^## \[' + re.escape(version) + r'\] - \d{4}-\d{2}-\d{2}\s*$', text, re.M)
+          if not heading:
+              raise SystemExit(f'CHANGELOG.md is missing a dated [{version}] release section')
+          rest = text[heading.end():]
+          end = re.search(r'^## |^\[Unreleased\]:', rest, re.M)
+          notes = rest[:end.start()] if end else rest
+          (dest / 'RELEASE-NOTES.md').write_text(heading.group().strip() + '\n\n' + notes.strip() + '\n')
+          PY
+
+      - name: Upload release files
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
-          changelog-file: ${{ matrix.changelog }}
+          name: ${{ env.RELEASE_ARTIFACT }}
+          path: build/release/*
+          if-no-files-found: error
+          retention-days: 14
 
-          modrinth-id: ${{ matrix.modrinth }}
-          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+  fabric-modrinth:
+    name: Fabric → Modrinth
+    needs: build
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'fabric-modrinth'
+    runs-on: ubuntu-latest
 
-          curseforge-id: ${{ matrix.curseforge }}
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-          github-token: ${{ secrets.REPOSITORY_TOKEN }}
-          github-tag: ${{ steps.meta.outputs.version }}
-          github-commitish: ${{ steps.meta.outputs.version }}
-
-          files: build/libs/*-fabric-(${{ matrix.minecraft_version }}).jar
-          github-files: |
-            build/libs/intermediates/*-fabric-*dev.jar
-            build/libs/intermediates/*-fabric-*sources.jar
-            build/libs/intermediates/*-fabric-*javadoc.jar
-            build/libs/intermediates/*-fabric-*shadow.jar
-
-          version: fabric-${{ steps.meta.outputs.version }}
-
-          game-versions: ${{ matrix.minecraft_version }}
-          
-          loaders: |
-            quilt
-            fabric
-
-          java: ${{ matrix.java }}
-
-      - name: publish (neoforge)
-        uses: Kir-Antipov/mc-publish@v3.3
+      - name: Download release jars
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
-          changelog-file: ${{ matrix.changelog }}
+          name: ${{ env.RELEASE_ARTIFACT }}
+          path: build/release
 
-          modrinth-id: ${{ matrix.modrinth }}
+      - name: Validate Modrinth token
+        shell: bash
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: '[[ -n "$MODRINTH_TOKEN" ]] || { echo "Missing MODRINTH_TOKEN Actions secret (repository or organization)." >&2; exit 1; }'
+
+      - name: Publish Fabric to Modrinth
+        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        with:
+          modrinth-id: ${{ env.MODRINTH_PROJECT_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: build/release/*-fabric.jar
+          name: ${{ needs.build.outputs.release_version }}-fabric
+          version: ${{ needs.build.outputs.release_version }}-fabric
+          version-type: release
+          changelog-file: build/release/RELEASE-NOTES.md
+          loaders: fabric
+          environment: server
+          game-versions: ${{ env.MINECRAFT_VERSION }}
+          dependencies: |
+            fabric-api(required){modrinth:fabric-api}{curseforge:fabric-api}
+            fabric-language-kotlin(required){modrinth:fabric-language-kotlin}{curseforge:fabric-language-kotlin}
+          java: ${{ env.JAVA_VERSION }}
+          retry-attempts: 3
+          fail-mode: fail
 
-          curseforge-id: ${{ matrix.curseforge }}
+  fabric-curseforge:
+    name: Fabric → CurseForge
+    needs: build
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'fabric-curseforge'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download release jars
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ env.RELEASE_ARTIFACT }}
+          path: build/release
+
+      - name: Validate CurseForge token
+        shell: bash
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: '[[ -n "$CURSEFORGE_TOKEN" ]] || { echo "Missing CURSEFORGE_TOKEN Actions secret (repository or organization)." >&2; exit 1; }'
+
+      - name: Publish Fabric to CurseForge
+        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        with:
+          curseforge-id: ${{ env.CURSEFORGE_PROJECT_ID }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          files: build/release/*-fabric.jar
+          name: ${{ needs.build.outputs.release_version }}-fabric
+          version: ${{ needs.build.outputs.release_version }}-fabric
+          version-type: release
+          changelog-file: build/release/RELEASE-NOTES.md
+          loaders: fabric
+          environment: server
+          game-versions: ${{ env.MINECRAFT_VERSION }}
+          dependencies: |
+            fabric-api(required){modrinth:fabric-api}{curseforge:fabric-api}
+            fabric-language-kotlin(required){modrinth:fabric-language-kotlin}{curseforge:fabric-language-kotlin}
+          java: ${{ env.JAVA_VERSION }}
+          retry-attempts: 3
+          fail-mode: fail
 
-          github-token: ${{ secrets.REPOSITORY_TOKEN }}
-          github-tag: ${{ steps.meta.outputs.version }}
-          github-commitish: ${{ steps.meta.outputs.version }}
+  neoforge-modrinth:
+    name: NeoForge → Modrinth
+    needs: build
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'neoforge-modrinth'
+    runs-on: ubuntu-latest
 
-          files: build/libs/*-neoforge-(${{ matrix.minecraft_version }}).jar
-          github-files: |
-            build/libs/intermediates/*-neoforge-*dev.jar
-            build/libs/intermediates/*-neoforge-*sources.jar
-            build/libs/intermediates/*-neoforge-*javadoc.jar
-            build/libs/intermediates/*-neoforge-*shadow.jar
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
-          version: neoforge-${{ steps.meta.outputs.version }}
+      - name: Download release jars
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ env.RELEASE_ARTIFACT }}
+          path: build/release
 
-          game-versions: ${{ matrix.minecraft_version }}
+      - name: Validate Modrinth token
+        shell: bash
+        env:
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+        run: '[[ -n "$MODRINTH_TOKEN" ]] || { echo "Missing MODRINTH_TOKEN Actions secret (repository or organization)." >&2; exit 1; }'
 
-          loaders: |
-            neoforge
+      - name: Publish NeoForge to Modrinth
+        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        with:
+          modrinth-id: ${{ env.MODRINTH_PROJECT_ID }}
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: build/release/*-neoforge.jar
+          name: ${{ needs.build.outputs.release_version }}-neoforge
+          version: ${{ needs.build.outputs.release_version }}-neoforge
+          version-type: release
+          changelog-file: build/release/RELEASE-NOTES.md
+          loaders: neoforge
+          environment: server
+          game-versions: ${{ env.MINECRAFT_VERSION }}
+          dependencies: kotlinforforge(required){modrinth:kotlin-for-forge}{curseforge:kotlin-for-forge}
+          java: ${{ env.JAVA_VERSION }}
+          retry-attempts: 3
+          fail-mode: fail
 
-          java: ${{ matrix.java }}
+  neoforge-curseforge:
+    name: NeoForge → CurseForge
+    needs: build
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'neoforge-curseforge'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Download release jars
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ env.RELEASE_ARTIFACT }}
+          path: build/release
+
+      - name: Validate CurseForge token
+        shell: bash
+        env:
+          CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
+        run: '[[ -n "$CURSEFORGE_TOKEN" ]] || { echo "Missing CURSEFORGE_TOKEN Actions secret (repository or organization)." >&2; exit 1; }'
+
+      - name: Publish NeoForge to CurseForge
+        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        with:
+          curseforge-id: ${{ env.CURSEFORGE_PROJECT_ID }}
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          files: build/release/*-neoforge.jar
+          name: ${{ needs.build.outputs.release_version }}-neoforge
+          version: ${{ needs.build.outputs.release_version }}-neoforge
+          version-type: release
+          changelog-file: build/release/RELEASE-NOTES.md
+          loaders: neoforge
+          environment: server
+          game-versions: ${{ env.MINECRAFT_VERSION }}
+          dependencies: kotlinforforge(required){modrinth:kotlin-for-forge}{curseforge:kotlin-for-forge}
+          java: ${{ env.JAVA_VERSION }}
+          retry-attempts: 3
+          fail-mode: fail
+
+  github-release:
+    name: GitHub release
+    needs: build
+    if: github.event_name != 'workflow_dispatch' || inputs.target == 'all' || inputs.target == 'github'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      - name: Download release jars
+        uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
+        with:
+          name: ${{ env.RELEASE_ARTIFACT }}
+          path: build/release
+
+      - name: Publish GitHub release
+        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          github-tag: ${{ needs.build.outputs.tag }}
+          github-commitish: ${{ github.sha }}
+          github-prerelease: false
+          files: |
+            build/release/*-fabric.jar
+            build/release/*-neoforge.jar
+          name: Remnant ${{ needs.build.outputs.release_version }}
+          version: ${{ needs.build.outputs.release_version }}
+          version-type: release
+          changelog-file: build/release/RELEASE-NOTES.md
+          java: ${{ env.JAVA_VERSION }}
+          retry-attempts: 3
+          fail-mode: fail

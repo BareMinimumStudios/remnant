@@ -1,10 +1,15 @@
 .idea/
+*.iml
 .gradle/
 .vscode/
-
 .kotlin/
 
 build/
+out/
 run/
+runs/
+logs/
+crash-reports/
 
 .DS_Store
+Thumbs.db

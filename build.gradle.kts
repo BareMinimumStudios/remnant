@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version libs.versions.kotlin
     alias(libs.plugins.cloche)
+    alias(libs.plugins.mixinmcp.decompile)
 }
 
 group = providers.gradleProperty("maven_group").get()
@@ -29,7 +30,7 @@ cloche {
     metadata {
         modId = "remnant"
         name = "Remnant"
-        description = "Allows server-side caching and access to registered player data while players are offline."
+        description = "Keeps registered player data available while players are offline."
         license = "BML-1.0"
 
         author {
@@ -117,4 +118,17 @@ cloche {
 
 kotlin {
     jvmToolchain(21)
+    compilerOptions {
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_2)
+    }
+}
+
+// Cloche's Fabric transforms need this generated mapping archive before resolving dependencies.
+tasks.matching {
+    it.name == "accessWidenFabric1211CommonMinecraft" ||
+        it.name == "accessWidenFabric1211Minecraft" ||
+        it.name == "createCommonApiStub"
+}.configureEach {
+    dependsOn("generateFabric1211MappingsArtifact")
 }

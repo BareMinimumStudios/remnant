@@ -124,10 +124,10 @@ class LedgerCache : SavedData(), ILedgerCache {
     }
 
     override val uuids: Collection<UUID>
-        get() = playerCache.keys
+        get() = playerCache.keys.toSet()
 
     override val usernames: Collection<String>
-        get() = usernamesToUUID.keys
+        get() = usernamesToUUID.keys.toSet()
 
     override fun isPlayerCached(uuid: UUID): Boolean = playerCache.containsKey(uuid)
 

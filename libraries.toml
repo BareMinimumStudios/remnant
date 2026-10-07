@@ -1,11 +1,12 @@
 [versions]
 # Build tooling
-cloche = "0.19.13"
-kotlin = "2.4.10"
+cloche = "0.18.10"
+mixinmcp = "1.5.0"
+kotlin = "2.2.21"
 parchment = "2024.11.17"
 
 # Kotlin language loaders
-fabric-language-kotlin = "1.13.13+kotlin.2.4.10"
+fabric-language-kotlin = "1.13.7+kotlin.2.2.21"
 neoforge-language-kotlin = "5.11.0"
 
 # Mod loaders
@@ -17,6 +18,7 @@ fabric-api = "0.116.15"
 
 [plugins]
 cloche = { id = "earth.terrarium.cloche", version.ref = "cloche" }
+mixinmcp-decompile = { id = "dev.mixinmcp.decompile", version.ref = "mixinmcp" }
 
 [libraries]
 fabric-language-kotlin = { module = "net.fabricmc:fabric-language-kotlin", version.ref = "fabric-language-kotlin" }

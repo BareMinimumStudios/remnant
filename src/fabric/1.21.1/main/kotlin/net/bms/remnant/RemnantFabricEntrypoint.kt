@@ -14,12 +14,12 @@ class RemnantFabricEntrypoint : ModInitializer {
             RemnantCommands.register(dispatcher)
         }
 
-        ServerPlayConnectionEvents.JOIN.register { impl, _, server ->
-            LedgerCache.getOrCreate(server).uncache(impl.player)
+        ServerPlayConnectionEvents.JOIN.register { handler, _, server ->
+            LedgerCache.getOrCreate(server).uncache(handler.player)
         }
 
-        ServerPlayConnectionEvents.DISCONNECT.register { impl, server ->
-            LedgerCache.getOrCreate(server).cache(impl.player)
+        ServerPlayConnectionEvents.DISCONNECT.register { handler, server ->
+            LedgerCache.getOrCreate(server).cache(handler.player)
         }
     }
 }

@@ -17,7 +17,7 @@ import java.io.File
 import java.io.FileOutputStream
 
 /**
- * A pseudo 'offline' player subclassing the actual [Player] instance.
+ * Lightweight [Player] representation backed by an offline ledger snapshot.
  */
 @ApiStatus.AvailableSince("1.0")
 class OfflinePlayer(server: MinecraftServer, val ledger: PlayerLedgerEntry, profile: GameProfile) : Player(server.overworld(), BlockPos.ZERO, 0.0F, profile), AutoCloseable {
@@ -67,8 +67,6 @@ class OfflinePlayer(server: MinecraftServer, val ledger: PlayerLedgerEntry, prof
     override fun isCreative(): Boolean = false
 
     override fun close() {
-        // override a save into uuid.dat
-
         try {
             val file = File.createTempFile("${stringUUID}.tmp", ".dat", playerDataDirectory)
 
@@ -81,8 +79,7 @@ class OfflinePlayer(server: MinecraftServer, val ledger: PlayerLedgerEntry, prof
             val inbound = File(playerDataDirectory, "${stringUUID}.dat_old")
 
             Util.safeReplaceFile(outbound.toPath(), file.toPath(), inbound.toPath())
-        }
-        catch (why: Exception) {
+        } catch (why: Exception) {
             Remnant.LOGGER.warn("Could not write offline player data to: $playerDataDirectory", why)
         }
     }

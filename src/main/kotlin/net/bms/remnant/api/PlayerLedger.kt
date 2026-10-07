@@ -17,7 +17,7 @@ import java.util.UUID
 typealias PlayerSerializer<R> = (Player) -> R
 
 /**
- * The API for the [LedgerCache] that allows for the registering and accessing of offline player data.
+ * Public API for registering player-ledger values and reading live or cached player data.
  *
  * @author karuzumi, DataEncoded, OverlordsIII
  */
@@ -36,7 +36,7 @@ object PlayerLedger {
      * This should be statically registered in your mod.
      *
      * @param id The [net.minecraft.resources.ResourceLocation] used to look up the [Record] entry.
-     * @param codec A given [Codec] to ser/de the data.
+     * @param codec The [Codec] used to serialize and deserialize the value.
      * @param serializer The function used to transform data on the [Player] to the given [Record].
      *
      * @throws IllegalStateException If the given [id] is already registered.
@@ -56,7 +56,7 @@ object PlayerLedger {
      * @param server A logical [MinecraftServer].
      * @param uuid The [UUID] used for the lookup operation for the player.
      *
-     * @return [LedgerPlayer] A sealed-class implementation that provide an [OfflinePlayer] if that player is offline, and an [Player] if online.
+     * @return A [LedgerPlayer] backed by the live player when online or an [OfflinePlayer] snapshot when cached.
      */
     @JvmStatic
     fun getPlayer(server: MinecraftServer, uuid: UUID): LedgerPlayer {
@@ -76,7 +76,7 @@ object PlayerLedger {
      * @param server A logical [MinecraftServer].
      * @param username The username used for the lookup operation for the player.
      *
-     * @return [LedgerPlayer] A sealed-class implementation that provide an [OfflinePlayer] if that player is offline, and an [Player] if online.
+     * @return A [LedgerPlayer] backed by the live player when online or an [OfflinePlayer] snapshot when cached.
      */
     @JvmStatic
     fun getPlayer(server: MinecraftServer, username: String): LedgerPlayer {
@@ -97,7 +97,7 @@ object PlayerLedger {
      * @param server A logical [MinecraftServer].
      * @param uuid The [UUID] used for the lookup operation for the cached [OfflinePlayer].
      *
-     * @return [OfflinePlayer] A pseudo-class of [Player] that is an offline 'entity'.
+     * @return A cached [OfflinePlayer], or `null` when no offline snapshot exists.
      */
     @JvmStatic
     fun getOfflinePlayer(server: MinecraftServer, uuid: UUID): OfflinePlayer? {
@@ -113,7 +113,7 @@ object PlayerLedger {
      * @param server A logical [MinecraftServer].
      * @param username The [GameProfile.getName] used for the lookup operation for the cached [OfflinePlayer].
      *
-     * @return [OfflinePlayer] A pseudo-class of [Player] that is an offline 'entity'.
+     * @return A cached [OfflinePlayer], or `null` when no offline snapshot exists.
      */
     @JvmStatic
     fun getOfflinePlayer(server: MinecraftServer, username: String): OfflinePlayer? {
@@ -129,7 +129,7 @@ object PlayerLedger {
      *
      * @param server A logical [MinecraftServer].
      *
-     * @return [OfflinePlayer] A pseudo-class of [Player] that is an offline 'entity'.
+     * @return A cached [OfflinePlayer], or `null` when no offline snapshot exists.
      */
     @JvmStatic
     fun getOfflinePlayers(server: MinecraftServer): Collection<OfflinePlayer> {

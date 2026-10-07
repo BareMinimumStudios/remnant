@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/assets/remnant-banner.png" alt="Remnant banner" width="100%">
+<img src="https://raw.githubusercontent.com/BareMinimumStudios/remnant/HEAD/docs/assets/remnant-banner.png" alt="Remnant banner" width="100%">
 
 <br>
 
@@ -20,7 +20,7 @@
 <a href="https://modrinth.com/mod/remnant"><img alt="Available on Modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg"></a>
 <a href="https://www.curseforge.com/minecraft/mc-mods/opc-directors-cut"><img alt="Available on CurseForge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg"></a>
 <a href="https://github.com/BareMinimumStudios/remnant"><img alt="Available on GitHub" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg"></a>
-<a href="DEVELOPMENT.md"><img alt="Documentation" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/generic_vector.svg"></a>
+<a href="https://github.com/BareMinimumStudios/remnant/blob/HEAD/DEVELOPMENT.md"><img alt="Documentation" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/generic_vector.svg"></a>
 
 <br>
 
@@ -162,11 +162,11 @@ Use the dependency configuration that matches your loader/toolchain (`modImpleme
 ./gradlew clean build
 ```
 
-The project produces Fabric and NeoForge artifacts from the same source tree. Local development notes, IntelliJ setup, and the optional MixinMCP workflow live in [`DEVELOPMENT.md`](DEVELOPMENT.md).
+The project produces Fabric and NeoForge artifacts from the same source tree. Local development notes, IntelliJ setup, and the optional MixinMCP workflow live in [`DEVELOPMENT.md`](https://github.com/BareMinimumStudios/remnant/blob/HEAD/DEVELOPMENT.md).
 
 ## Publishing
 
-Tagged releases are handled by [`.github/workflows/publish.yml`](.github/workflows/publish.yml) with [`Kira-NT/mc-publish`](https://github.com/Kira-NT/mc-publish). Fabric and NeoForge publish independently to Modrinth and CurseForge while GitHub receives a single release containing both jars.
+Tagged releases are handled by [`.github/workflows/publish.yml`](https://github.com/BareMinimumStudios/remnant/blob/HEAD/.github/workflows/publish.yml) with [`Kira-NT/mc-publish`](https://github.com/Kira-NT/mc-publish). Fabric and NeoForge publish independently to Modrinth and CurseForge while GitHub receives a single release containing both jars.
 
 The release workflow expects:
 

@@ -1,33 +1,53 @@
 # Changelog
 
-## 2.0.0-beta.5
+Notable changes to Remnant are documented here, newest release first.
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
-### Deployment
-- Reworked releases around `Kira-NT/mc-publish` v3.3.1 for Modrinth, CurseForge, and GitHub Releases.
-- Publish Fabric and NeoForge as distinct platform versions while creating only one GitHub release/tag.
-- Build once, then fan out into independent Modrinth, CurseForge, and GitHub jobs so failed destinations can be retried without duplicating successful uploads.
-- Add targeted manual recovery options for each loader/platform destination.
-- Validate release tags against `mod_version` and verify loader jars before upload.
-- Fail early when Modrinth or CurseForge credentials are missing.
-- Pin the current GitHub Actions releases and mc-publish to immutable commit SHAs.
-- Add Dependabot maintenance for Gradle and GitHub Actions.
+## [Unreleased]
 
-### Build
-- Centralize project version/group in `gradle.properties`.
-- Keep the existing, known project dependency baseline for the release source rather than forcing untested loader/runtime upgrades.
-- Document newer Kotlin/Fabric updates as follow-up candidates; keep Kotlin for Forge 5.11.0 and NeoForge 21.1.26 pending real launch testing because newer KFF/NeoForge combinations have unresolved 1.21.1 language-provider reports.
-- Enable the Gradle build cache and configuration cache and use a Java 21 toolchain.
-- Verify the Gradle 9.5.1 distribution with its official SHA-256 checksum; regenerate the checked-in wrapper JAR separately before release.
-- Remove unused repositories, buildscript dependencies, compiler flags, and the unused `maven-publish` plugin.
+## [3.0.0] - 2026-10-07
 
-### Correctness and cleanup
-- Fix duplicate ledger registration so duplicate ids fail instead of returning an unregistered key.
-- Expose the registered-key `BiMap` as an unmodifiable view.
-- Make offline cache loading and per-key serialization more resilient to malformed or failing data.
-- Keep cache internals private and use a stable player-data directory when an `OfflinePlayer` is closed.
-- Fix username-change handling in the UUID/name `BiMap` and make offline name lookups case-insensitive.
-- Fix command registration conflicts around `/remnant clear`.
-- Make `get` and `list` correctly support live online players as well as cached offline players.
-- Correct `/remnant players` counts and improve command failure reporting.
-- Fix NeoForge event registration so integrated servers receive login/logout/command events without duplicate subscriber paths.
-- Refresh documentation to match the current Remnant API, loaders, commands, and BML license.
+Stable release for Minecraft 1.21.1 on Fabric and NeoForge. Remnant continues Offline Player Cache (OPC).
+
+### Added
+
+- Separate Fabric and NeoForge publishing jobs for Modrinth and CurseForge, plus a single GitHub release containing both loader JARs.
+- Manual recovery options for each loader and destination, so one failed upload can be retried without repeating successful uploads.
+- Release validation for version tags, loader JARs, and missing marketplace credentials.
+- A refreshed Remnant logo and banner based on the original OPC artwork, with a 256×256 icon and a 1920×640 banner optimized for web use.
+- GitHub, Modrinth, and CurseForge descriptions, with the Bare Minimum Studios BisectHosting banner and sponsor code.
+- MixinMCP 1.5.0 development tooling and an IntelliJ/Gradle setup guide.
+- Dependabot configuration for Gradle and GitHub Actions maintenance.
+
+### Changed
+
+- Public versions use `3.0.0+1.21.1-fabric` and `3.0.0+1.21.1-neoforge`; the internal mod version remains `3.0.0` and the GitHub tag is `v3.0.0+1.21.1`.
+- Publishing builds both loaders once, then uploads to each destination independently with stable Release status.
+- GitHub release authentication uses the automatic `GITHUB_TOKEN` with permission to write repository contents.
+- Publishing stages verified runtime JARs under consistent filenames and uses only the current release's changelog section as release notes.
+- Project version and Maven group are configured in `gradle.properties`.
+- Builds use Java 21, Gradle build and configuration caches, and a checksum-verified Gradle distribution.
+- Gradle parallel execution is disabled for the MixinMCP/Vineflower development workflow to reduce decompilation memory pressure.
+- Cached UUID and name collections now return snapshots instead of mutable backing-map views; the registered-key map is exposed as an unmodifiable view.
+- Offline cache loading and per-key serialization handle malformed or failing data more safely.
+- Documentation reflects the current API, commands, dependencies, project links, and BML v1.0 license. Maven examples use Modrinth project ID `oLPaySSb`.
+- GitHub Actions and mc-publish references remain pinned to commit SHAs.
+
+### Removed
+
+- Unused repositories, buildscript dependencies, compiler flags, and the unused `maven-publish` plugin.
+
+### Fixed
+
+- Build-tool incompatibilities by aligning Gradle 9.2.1, Cloche 0.18.10, Kotlin 2.2.21, and matching Fabric Language Kotlin, with Kotlin 2.2 language/API output.
+- Fabric dependency transforms running before their required mapping archive was generated.
+- Duplicate ledger registrations returning an unregistered key instead of rejecting the duplicate ID.
+- Offline player persistence using an unstable player-data directory when a player entry is closed.
+- Username changes leaving inconsistent UUID/name mappings, and case-sensitive offline name lookups.
+- Command registration conflicts involving `/remnant clear`.
+- `get` and `list` failing to handle live online players alongside cached offline players.
+- Incorrect `/remnant players` counts and unclear command failure reporting.
+- NeoForge integrated servers missing login, logout, or command events, with duplicate subscriber paths removed.
+
+[Unreleased]: https://github.com/BareMinimumStudios/remnant/compare/v3.0.0+1.21.1...HEAD
+[3.0.0]: https://github.com/BareMinimumStudios/remnant/releases/tag/v3.0.0+1.21.1
