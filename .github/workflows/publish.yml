@@ -159,7 +159,7 @@ jobs:
         run: '[[ -n "$MODRINTH_TOKEN" ]] || { echo "Missing MODRINTH_TOKEN Actions secret (repository or organization)." >&2; exit 1; }'
 
       - name: Publish Fabric to Modrinth
-        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        uses: Kira-NT/mc-publish@c23376546a97f5ba7984e94445da359459b14419 # v3.3.2
         with:
           modrinth-id: ${{ env.MODRINTH_PROJECT_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -201,7 +201,7 @@ jobs:
         run: '[[ -n "$CURSEFORGE_TOKEN" ]] || { echo "Missing CURSEFORGE_TOKEN Actions secret (repository or organization)." >&2; exit 1; }'
 
       - name: Publish Fabric to CurseForge
-        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        uses: Kira-NT/mc-publish@c23376546a97f5ba7984e94445da359459b14419 # v3.3.2
         with:
           curseforge-id: ${{ env.CURSEFORGE_PROJECT_ID }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -243,7 +243,7 @@ jobs:
         run: '[[ -n "$MODRINTH_TOKEN" ]] || { echo "Missing MODRINTH_TOKEN Actions secret (repository or organization)." >&2; exit 1; }'
 
       - name: Publish NeoForge to Modrinth
-        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        uses: Kira-NT/mc-publish@c23376546a97f5ba7984e94445da359459b14419 # v3.3.2
         with:
           modrinth-id: ${{ env.MODRINTH_PROJECT_ID }}
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -283,7 +283,7 @@ jobs:
         run: '[[ -n "$CURSEFORGE_TOKEN" ]] || { echo "Missing CURSEFORGE_TOKEN Actions secret (repository or organization)." >&2; exit 1; }'
 
       - name: Publish NeoForge to CurseForge
-        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        uses: Kira-NT/mc-publish@c23376546a97f5ba7984e94445da359459b14419 # v3.3.2
         with:
           curseforge-id: ${{ env.CURSEFORGE_PROJECT_ID }}
           curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
@@ -321,7 +321,7 @@ jobs:
           path: build/release
 
       - name: Publish GitHub release
-        uses: Kira-NT/mc-publish@52307b03863581dec6b652b83e597aec02ebb075 # v3.3.1
+        uses: Kira-NT/mc-publish@c23376546a97f5ba7984e94445da359459b14419 # v3.3.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           github-tag: ${{ needs.build.outputs.tag }}
