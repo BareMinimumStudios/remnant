@@ -22,6 +22,12 @@ MixinMCP's Gradle companion is included in the project for dependency-source ind
 
 The first run can take a while because dependencies without published source jars are decompiled and cached. Later runs reuse that cache.
 
+## Gradle compatibility
+
+Use the checked-in Gradle 9.9.2 wrapper. Cloche 0.18.10 registers the loader JARs through the deprecated `archives` configuration, uses an unsupported enum for its `includeState` attribute, and reads an injected `Project` during Fabric dependency resolution. Gradle 10 makes all three warnings errors. Cloche 0.19.14 still contains the archive registration and the unsupported attribute type.
+
+The Kotlin Gradle plugin also calls `Configuration.setVisible(boolean)`, which Gradle schedules for removal in Gradle 11.
+
 ## IntelliJ + MixinMCP
 
 For Minecraft-aware MCP tooling, install [MixinMCP](https://github.com/muon-rw/MixinMCP) in IntelliJ IDEA 2026.2 or newer and enable IntelliJ's built-in MCP Server under **Settings → Tools → MCP Server**.
@@ -45,7 +51,7 @@ Keep IntelliJ, Codex/ChatGPT desktop, Git, and Gradle pointed at the same local 
 Run:
 
 ```bash
-./gradlew clean build --stacktrace
+./gradlew clean build --stacktrace --warning-mode all
 ```
 
 If build scripts or dependencies changed, also run:
