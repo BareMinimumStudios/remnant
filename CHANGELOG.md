@@ -2,8 +2,16 @@
 
 Notable changes to Remnant are documented here, newest release first.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
+Remnant follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+
+## [3.0.1] - 2026-11-27
+
+### Changed
+
+- List offline players and their key counts without copying each player's cached values.
+- Validate the changelog in CI and use the current dated entry as release notes on GitHub, Modrinth, and CurseForge.
 
 ## [3.0.0] - 2026-10-07
 
@@ -49,5 +57,6 @@ Stable release for Minecraft 1.21.1 on Fabric and NeoForge. Remnant continues Of
 - Incorrect `/remnant players` counts and unclear command failure reporting.
 - NeoForge integrated servers missing login, logout, or command events, with duplicate subscriber paths removed.
 
-[Unreleased]: https://github.com/BareMinimumStudios/remnant/compare/v3.0.0+1.21.1...HEAD
+[Unreleased]: https://github.com/BareMinimumStudios/remnant/compare/v3.0.1+1.21.1...HEAD
+[3.0.1]: https://github.com/BareMinimumStudios/remnant/compare/v3.0.0+1.21.1...v3.0.1+1.21.1
 [3.0.0]: https://github.com/BareMinimumStudios/remnant/releases/tag/v3.0.0+1.21.1

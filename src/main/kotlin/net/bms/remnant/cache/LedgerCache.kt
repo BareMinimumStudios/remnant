@@ -210,6 +210,8 @@ class LedgerCache : SavedData(), ILedgerCache {
         return removed
     }
 
+    internal fun cachedKeyCount(uuid: UUID): Int = playerCache[uuid]?.size ?: 0
+
     override fun getPlayerCache(uuid: UUID): PlayerLedgerEntry? = playerCache[uuid]?.toMap()
 
     override fun getPlayerCache(username: String): PlayerLedgerEntry? {

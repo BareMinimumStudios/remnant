@@ -173,16 +173,16 @@ The release workflow expects:
 - `MODRINTH_TOKEN`
 - `CURSEFORGE_TOKEN`
 
-For this release, `mod_version` is `3.0.0`. Update `CHANGELOG.md` before publishing and set its release date to the day you publish. Open **Actions → publish → Run workflow**, select your source branch, and choose `all`. You can also publish by pushing the matching tag `v3.0.0+1.21.1`. For a partial failure, run the workflow again with only the failed destination selected; do not repeat successful uploads.
+For this release, `mod_version` is `3.0.1`. Move the release changes from `[Unreleased]` into the dated version section of `CHANGELOG.md` and update the comparison links. Set the date to the day you publish. CI checks the changelog, and publishing uses that version section for all three destinations. Open **Actions → publish → Run workflow**, select your source branch, and choose `all`. You can also publish by pushing the matching tag `v3.0.1+1.21.1`. For a partial failure, run the workflow again with only the failed destination selected; do not repeat successful uploads.
 
 GitHub uses its automatic `GITHUB_TOKEN`; no `REPOSITORY_TOKEN` secret is needed. Organization marketplace secrets work when they grant this repository access. The workflow extracts only the current release section from `CHANGELOG.md` for release notes.
 
 The public release naming is intentionally consistent with the existing project scheme:
 
-- marketplace display names: `3.0.0+1.21.1-fabric` and `3.0.0+1.21.1-neoforge`
-- GitHub display name: `Remnant 3.0.0+1.21.1`
-- Fabric version: `3.0.0+1.21.1-fabric`
-- NeoForge version: `3.0.0+1.21.1-neoforge`
+- marketplace display names: `3.0.1+1.21.1-fabric` and `3.0.1+1.21.1-neoforge`
+- GitHub display name: `Remnant 3.0.1+1.21.1`
+- Fabric version: `3.0.1+1.21.1-fabric`
+- NeoForge version: `3.0.1+1.21.1-neoforge`
 - release channel: **Release**
 
 ## Project lineage

@@ -164,14 +164,15 @@ object RemnantCommands {
 
     private fun executeGetPlayers(ctx: CommandContext<CommandSourceStack>): Int {
         val cache = LedgerCache.getOrCreate(ctx.source.server)
+        val cachedUuids = cache.uuids
         ctx.source.sendSuccess(
-            { Component.literal("Listing Offline Players [${cache.uuids.size}]:").withStyle(ChatFormatting.BOLD) },
+            { Component.literal("Listing Offline Players [${cachedUuids.size}]:").withStyle(ChatFormatting.BOLD) },
             false,
         )
 
-        cache.uuids.forEach { uuid ->
+        cachedUuids.forEach { uuid ->
             val username = cache.getUsernameFromUUID(uuid) ?: "unknown"
-            val keyCount = cache.getPlayerCache(uuid)?.size ?: 0
+            val keyCount = cache.cachedKeyCount(uuid)
             ctx.source.sendSuccess({ Component.literal("$username ($uuid) [$keyCount keys]") }, false)
         }
 
