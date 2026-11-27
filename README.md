@@ -18,7 +18,7 @@
 <br>
 
 <a href="https://modrinth.com/mod/remnant"><img alt="Available on Modrinth" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/modrinth_vector.svg"></a>
-<a href="https://www.curseforge.com/minecraft/mc-mods/opc-directors-cut"><img alt="Available on CurseForge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg"></a>
+<a href="https://www.curseforge.com/minecraft/mc-mods/remnant-opc"><img alt="Available on CurseForge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg"></a>
 <a href="https://github.com/BareMinimumStudios/remnant"><img alt="Available on GitHub" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg"></a>
 <a href="DEVELOPMENT.md"><img alt="Documentation" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/documentation/generic_vector.svg"></a>
 
@@ -34,9 +34,9 @@
 
 ## What is Remnant?
 
-Remnant lets mods read registered player data after a player logs out. It is a server-side library for Minecraft 1.21.1 on Fabric and NeoForge, continuing **Offline Player Cache (OPC)**.
+Remnant continues **Offline Player Cache (OPC)** as a server-side library for Minecraft 1.21.1. The stable 3.0.0 release supports Fabric and NeoForge. Mods can use it to keep their registered player data available after logout.
 
-Mods register a value, a Mojang `Codec`, and a serializer that knows how to read that value from a live player. When the player disconnects, Remnant takes a snapshot and stores it in the world. When they return, the stale offline copy is removed and reads go back to the live player.
+Each integration registers the values it needs. On logout, Remnant saves successfully captured values in Minecraft world data (`SavedData`), so snapshots survive server restarts. On login, Remnant clears the offline snapshot and reads use the live player again.
 
 Use it for leaderboards, statistics, progression, or server tools that need player data while someone is offline. Integrating mods choose which values to register; Remnant stores and reads those values.
 
@@ -57,7 +57,7 @@ Use it for leaderboards, statistics, progression, or server tools that need play
 | Fabric | Fabric API, Fabric Language Kotlin |
 | NeoForge | Kotlin for Forge |
 
-Remnant is designed for server-side use. Integrating mods decide what gets registered and how each value is produced.
+Install the 3.0.0 JAR for your loader and the dependencies above on the server. Remnant runs on the logical server, including an integrated server when installed in a single-player instance.
 
 ## Commands
 
@@ -76,7 +76,7 @@ All Remnant administration commands require permission level 2.
 | `/remnant clear name <name>` | Clears the full offline snapshot for a name. |
 | `/remnant clear uuid <uuid>` | Clears the full offline snapshot for a UUID. |
 
-`get` and `list` work with both online and offline players. Online reads are created from the live player at command time; offline reads come from the stored ledger snapshot. `remove` and `clear` only touch offline cache data.
+`get` and `list` read live values for online players and saved values for offline players. Lookups support UUIDs and case-insensitive usernames. `remove` and `clear` only modify offline snapshots.
 
 ## Developer API
 
@@ -129,11 +129,11 @@ if (player instanceof LedgerPlayer.Offline offline) {
 }
 ```
 
-`PlayerLedger.getPlayer(...)` prefers the live `ServerPlayer` when the player is online. If they are offline and Remnant has a snapshot, it returns `LedgerPlayer.Offline`. `getOfflinePlayer(...)` is also available when an integration specifically wants cached data only.
+`PlayerLedger.getPlayer(...)` prefers the live `ServerPlayer` when the player is online. If they are offline and Remnant has a snapshot, it returns `LedgerPlayer.Offline`. If neither is available, `getPlayer(...)` throws `IllegalStateException`. Use `getOfflinePlayer(...)` for a cache-only lookup that returns `null` when there is no snapshot. An individual snapshot can be missing a key, so `entry(...)` can also return `null`.
 
 ## Adding Remnant to a project
 
-Published builds are available through [Modrinth](https://modrinth.com/mod/remnant) and [CurseForge](https://www.curseforge.com/minecraft/mc-mods/opc-directors-cut).
+Published builds are available through [Modrinth](https://modrinth.com/mod/remnant) and [CurseForge](https://www.curseforge.com/minecraft/mc-mods/remnant-opc).
 
 For projects that consume Modrinth Maven artifacts directly, using the project ID keeps the coordinate stable even if the public project slug changes:
 
@@ -150,7 +150,7 @@ repositories {
 }
 
 dependencies {
-    implementation("maven.modrinth:oLPaySSb:<version>")
+    implementation("maven.modrinth:oLPaySSb:3.0.0+1.21.1-fabric") /* For NeoForge, use 3.0.0+1.21.1-neoforge. */
 }
 ```
 

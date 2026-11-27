@@ -3,16 +3,16 @@
 [![BML 1.0](https://img.shields.io/badge/LICENSE-BML--1.0-FFFFFF?style=for-the-badge&labelColor=1A1A1A)](https://github.com/BareMinimumStudios/remnant/blob/HEAD/LICENSE)
 [![Build](https://img.shields.io/github/actions/workflow/status/BareMinimumStudios/remnant/build.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=BUILD&labelColor=1A1A1A)](https://github.com/BareMinimumStudios/remnant/actions/workflows/build.yml)
 [![GitHub](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg)](https://github.com/BareMinimumStudios/remnant)
-[![CurseForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/opc-directors-cut)
+[![CurseForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/remnant-opc)
 
 ![Fabric](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg)
 ![NeoForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/neoforge_vector.svg)
 
 ## Remnant
 
-Remnant lets mods read registered player data after a player logs out. It is a server-side library for Minecraft 1.21.1 on Fabric and NeoForge, continuing **Offline Player Cache (OPC)**.
+Remnant continues **Offline Player Cache (OPC)** as a server-side library for Minecraft 1.21.1. The stable 3.0.0 release supports Fabric and NeoForge. Mods can use it to keep their registered player data available after logout.
 
-An integrating mod registers a value, a Mojang `Codec`, and a serializer for reading that value from a live player. On disconnect, Remnant snapshots every registered value into world `SavedData`. When the player comes back, the stale offline snapshot is removed and reads return to the live player.
+Each integration registers the values it needs. On logout, Remnant saves successfully captured values in Minecraft world data (`SavedData`), so snapshots survive server restarts. On login, Remnant clears the offline snapshot and reads use the live player again.
 
 Use it for leaderboards, statistics, progression, and server tools that need player data while someone is offline. Remnant stores the values registered by integrating mods.
 
@@ -22,7 +22,7 @@ Use it for leaderboards, statistics, progression, and server tools that need pla
 - **NeoForge 1.21.1** — requires Kotlin for Forge
 - **Java 21**
 
-Install the JAR for your loader. Remnant does not add player-facing features on its own; other mods use its API.
+Install the 3.0.0 JAR for your loader and the dependencies above on the server. Integrating mods supply the values used by leaderboards, stats, and other features.
 
 ## Commands
 
@@ -45,7 +45,7 @@ All commands require permission level 2.
 /remnant clear uuid <uuid>
 ```
 
-`get` and `list` can inspect either a live player or an offline snapshot. `remove` and `clear` only modify offline cache data.
+`get` and `list` read live values for online players and saved values for offline players. Lookups support UUIDs and case-insensitive usernames. `remove` and `clear` only modify offline snapshots.
 
 ## For developers
 
@@ -59,7 +59,7 @@ public static final PlayerLedgerKey<Contract> CONTRACT = PlayerLedger.register(
 );
 ```
 
-Read through `PlayerLedger.getPlayer(...)` to get either a live `LedgerPlayer.Online` or a cached `LedgerPlayer.Offline`.
+Use `PlayerLedger.getPlayer(...)` with a UUID or username to read a live player or an offline snapshot. It throws `IllegalStateException` when neither is available. Use `getOfflinePlayer(...)` for a cache-only lookup that returns `null` when there is no snapshot.
 
 For Modrinth Maven, use the project ID so the coordinate stays stable if the public slug changes:
 
@@ -76,7 +76,7 @@ repositories {
 }
 
 dependencies {
-    implementation("maven.modrinth:oLPaySSb:<version>")
+    implementation("maven.modrinth:oLPaySSb:3.0.0+1.21.1-fabric") /* For NeoForge, use 3.0.0+1.21.1-neoforge. */
 }
 ```
 
@@ -87,7 +87,7 @@ Full API examples, source, development notes, and release history are available 
 - [Source](https://github.com/BareMinimumStudios/remnant)
 - [Issues](https://github.com/BareMinimumStudios/remnant/issues)
 - [Modrinth](https://modrinth.com/mod/remnant)
-- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/opc-directors-cut)
+- [CurseForge](https://www.curseforge.com/minecraft/mc-mods/remnant-opc)
 
 ## Sponsor
 
