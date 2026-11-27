@@ -1,6 +1,6 @@
 ![Remnant banner](https://raw.githubusercontent.com/BareMinimumStudios/remnant/HEAD/docs/assets/remnant-banner.png)
 
-[![BML 1.0](https://img.shields.io/badge/LICENSE-BML--1.0-FFFFFF?style=for-the-badge&labelColor=1A1A1A)](https://github.com/BareMinimumStudios/remnant/blob/HEAD/LICENSE)
+[![BML 1.1](https://img.shields.io/badge/LICENSE-BML--1.1-FFFFFF?style=for-the-badge&labelColor=1A1A1A)](https://github.com/BareMinimumStudios/remnant/blob/HEAD/LICENSE)
 [![Build](https://img.shields.io/github/actions/workflow/status/BareMinimumStudios/remnant/build.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=BUILD&labelColor=1A1A1A)](https://github.com/BareMinimumStudios/remnant/actions/workflows/build.yml)
 [![GitHub](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/github_vector.svg)](https://github.com/BareMinimumStudios/remnant)
 [![CurseForge](https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/available/curseforge_vector.svg)](https://www.curseforge.com/minecraft/mc-mods/remnant-opc)
@@ -97,4 +97,4 @@ Use code **`bareminimum`** to get **25% off your first month**.
 
 ## License
 
-Remnant is licensed under the **Bare Minimum License (BML) v1.0**. See the [full license](https://github.com/BareMinimumStudios/remnant/blob/HEAD/LICENSE).
+Remnant is licensed under the **Bare Minimum License (BML) v1.1**. See the [full license](https://github.com/BareMinimumStudios/remnant/blob/HEAD/LICENSE).

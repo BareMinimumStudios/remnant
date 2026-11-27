@@ -4,7 +4,7 @@
 
 <br>
 
-<a href="https://github.com/BareMinimumStudios/remnant/blob/HEAD/LICENSE"><img alt="BML 1.0" src="https://img.shields.io/badge/LICENSE-BML--1.0-FFFFFF?style=for-the-badge&labelColor=1A1A1A"></a>
+<a href="https://github.com/BareMinimumStudios/remnant/blob/HEAD/LICENSE"><img alt="BML 1.1" src="https://img.shields.io/badge/LICENSE-BML--1.1-FFFFFF?style=for-the-badge&labelColor=1A1A1A"></a>
 <a href="https://github.com/BareMinimumStudios/remnant/actions/workflows/build.yml"><img alt="Build" src="https://img.shields.io/github/actions/workflow/status/BareMinimumStudios/remnant/build.yml?style=for-the-badge&logo=githubactions&logoColor=white&label=BUILD&labelColor=1A1A1A"></a>
 <a href="https://github.com/BareMinimumStudios/remnant/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/BareMinimumStudios/remnant?style=for-the-badge&logo=github&labelColor=1A1A1A&color=FFFFFF"></a>
 <a href="https://github.com/BareMinimumStudios/remnant/forks"><img alt="GitHub forks" src="https://img.shields.io/github/forks/BareMinimumStudios/remnant?style=for-the-badge&logo=github&labelColor=1A1A1A&color=FFFFFF"></a>
@@ -197,4 +197,4 @@ Use code **`bareminimum`** to get **25% off your first month**.
 
 ## License
 
-Remnant is licensed under the **Bare Minimum License (BML) v1.0**. See the [license on the main repository](https://github.com/BareMinimumStudios/remnant/blob/HEAD/LICENSE) for the complete terms.
+Remnant is licensed under the **Bare Minimum License (BML) v1.1**. See the [license on the main repository](https://github.com/BareMinimumStudios/remnant/blob/HEAD/LICENSE) for the complete terms.

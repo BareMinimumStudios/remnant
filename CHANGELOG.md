@@ -10,6 +10,7 @@ Remnant follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ### Changed
 
+- Adopt the Bare Minimum License v1.1 and include the license text in both loader JARs.
 - List offline players and their key counts without copying each player's cached values.
 - Validate the changelog in CI and use the current dated entry as release notes on GitHub, Modrinth, and CurseForge.
 

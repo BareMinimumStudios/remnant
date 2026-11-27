@@ -31,7 +31,7 @@ cloche {
         modId = "remnant"
         name = "Remnant"
         description = "Keeps registered player data available while players are offline."
-        license = "BML-1.0"
+        license = "BML-1.1"
 
         author {
             name = "karuzumi"
@@ -114,6 +114,10 @@ cloche {
             }
         }
     }
+}
+
+tasks.withType<ProcessResources>().matching { it.name == "processFabric1211Resources" || it.name == "processNeoforge1211Resources" }.configureEach {
+    from(rootProject.file("LICENSE"))
 }
 
 kotlin {
