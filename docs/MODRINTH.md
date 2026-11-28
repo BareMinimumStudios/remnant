@@ -8,7 +8,7 @@
 <a href="https://github.com/BareMinimumStudios/remnant"><img src="https://img.shields.io/badge/Source-1A1A1A?logo=github&amp;logoColor=F5F5F5&amp;style=for-the-badge" alt="GitHub source" height="28"></a>
 <a href="https://github.com/BareMinimumStudios/remnant/issues"><img src="https://img.shields.io/github/issues/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=8C2928" alt="Report an issue" height="28"></a>
 <a href="https://github.com/BareMinimumStudios/remnant/forks"><img src="https://img.shields.io/github/forks/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=30683B" alt="Forks" height="28"></a>
-<a href="https://github.com/BareMinimumStudios/remnant/stargazers"><img src="https://img.shields.io/github/stars/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=755315" alt="Stars" height="28"></a>
+<a href="https://github.com/BareMinimumStudios/remnant"><img src="https://img.shields.io/github/stars/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=755315" alt="Stars" height="28"></a>
 </p>
 
 <p align="center" style="text-align: center;"><strong>Minecraft 1.21.1 · Fabric + NeoForge · Java 21</strong></p>
@@ -66,26 +66,7 @@ public static final PlayerLedgerKey<Contract> CONTRACT = PlayerLedger.register(
 
 Use `PlayerLedger.getPlayer(...)` with a UUID or username to read a live player or an offline snapshot. It throws `IllegalStateException` when neither is available. Use `getOfflinePlayer(...)` for a cache-only lookup that returns `null` when there is no snapshot.
 
-For Modrinth Maven, use the project ID so the coordinate stays stable if the public slug changes:
-
-```kotlin
-repositories {
-    exclusiveContent {
-        forRepository {
-            maven("https://api.modrinth.com/maven")
-        }
-        filter {
-            includeGroup("maven.modrinth")
-        }
-    }
-}
-
-dependencies {
-    implementation("maven.modrinth:oLPaySSb:3.0.0+1.21.1-fabric") /* For NeoForge, use 3.0.0+1.21.1-neoforge. */
-}
-```
-
-Full API examples, source, development notes, and release history are available on the [main GitHub repository](https://github.com/BareMinimumStudios/remnant).
+See the [GitHub README for API examples and Maven setup](https://github.com/BareMinimumStudios/remnant#adding-remnant-to-a-project).
 
 ## License
 
