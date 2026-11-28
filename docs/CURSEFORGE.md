@@ -3,12 +3,12 @@
 </p>
 
 <p align="center" style="text-align: center;">
-<a href="https://modrinth.com/mod/remnant"><img src="https://img.shields.io/badge/Modrinth-133329?logo=modrinth&amp;logoColor=8CFFCF&amp;style=for-the-badge" alt="Modrinth" height="28"></a>
-<a href="https://www.curseforge.com/minecraft/mc-mods/remnant-opc"><img src="https://img.shields.io/badge/CurseForge-39232B?logo=curseforge&amp;logoColor=FFA880&amp;style=for-the-badge" alt="CurseForge" height="28"></a>
-<a href="https://github.com/BareMinimumStudios/remnant"><img src="https://img.shields.io/badge/Source-242B49?logo=github&amp;logoColor=EAF0FF&amp;style=for-the-badge" alt="GitHub source" height="28"></a>
-<a href="https://github.com/BareMinimumStudios/remnant/issues"><img src="https://img.shields.io/github/issues/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=242B49&amp;color=364775" alt="Report an issue" height="28"></a>
-<a href="https://github.com/BareMinimumStudios/remnant/forks"><img src="https://img.shields.io/github/forks/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=242B49&amp;color=364775" alt="Forks" height="28"></a>
-<a href="https://github.com/BareMinimumStudios/remnant/stargazers"><img src="https://img.shields.io/github/stars/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=242B49&amp;color=364775" alt="Stars" height="28"></a>
+<a href="https://modrinth.com/mod/remnant"><img src="https://img.shields.io/badge/Modrinth-203326?logo=modrinth&amp;logoColor=75C67A&amp;style=for-the-badge" alt="Modrinth" height="28"></a>
+<a href="https://www.curseforge.com/minecraft/mc-mods/remnant-opc"><img src="https://img.shields.io/badge/CurseForge-3C2020?logo=curseforge&amp;logoColor=F26B67&amp;style=for-the-badge" alt="CurseForge" height="28"></a>
+<a href="https://github.com/BareMinimumStudios/remnant"><img src="https://img.shields.io/badge/Source-1A1A1A?logo=github&amp;logoColor=F5F5F5&amp;style=for-the-badge" alt="GitHub source" height="28"></a>
+<a href="https://github.com/BareMinimumStudios/remnant/issues"><img src="https://img.shields.io/github/issues/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=8C2928" alt="Report an issue" height="28"></a>
+<a href="https://github.com/BareMinimumStudios/remnant/forks"><img src="https://img.shields.io/github/forks/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=30683B" alt="Forks" height="28"></a>
+<a href="https://github.com/BareMinimumStudios/remnant/stargazers"><img src="https://img.shields.io/github/stars/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=755315" alt="Stars" height="28"></a>
 </p>
 
 <p align="center" style="text-align: center;"><strong>Minecraft 1.21.1 · Fabric + NeoForge · Java 21</strong></p>
