@@ -1,17 +1,8 @@
-<p align="center" style="text-align: center;">
-<img src="https://raw.githubusercontent.com/BareMinimumStudios/remnant/HEAD/docs/assets/remnant-banner.png" alt="Remnant wordmark beside a pixel-art ledger with red, gold, and green tabs" width="1080">
-</p>
+![Remnant wordmark beside a pixel-art ledger with red, gold, and green tabs](https://raw.githubusercontent.com/BareMinimumStudios/remnant/HEAD/docs/assets/remnant-banner.png)
 
-<p align="center" style="text-align: center;">
-<a href="https://modrinth.com/mod/remnant"><img src="https://img.shields.io/badge/Modrinth-203326?logo=modrinth&amp;logoColor=75C67A&amp;style=for-the-badge" alt="Modrinth" height="28"></a>
-<a href="https://www.curseforge.com/minecraft/mc-mods/remnant-opc"><img src="https://img.shields.io/badge/CurseForge-3C2020?logo=curseforge&amp;logoColor=F26B67&amp;style=for-the-badge" alt="CurseForge" height="28"></a>
-<a href="https://github.com/BareMinimumStudios/remnant"><img src="https://img.shields.io/badge/Source-1A1A1A?logo=github&amp;logoColor=F5F5F5&amp;style=for-the-badge" alt="GitHub source" height="28"></a>
-<a href="https://github.com/BareMinimumStudios/remnant/issues"><img src="https://img.shields.io/github/issues/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=8C2928" alt="Report an issue" height="28"></a>
-<a href="https://github.com/BareMinimumStudios/remnant/forks"><img src="https://img.shields.io/github/forks/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=30683B" alt="Forks" height="28"></a>
-<a href="https://github.com/BareMinimumStudios/remnant"><img src="https://img.shields.io/github/stars/BareMinimumStudios/remnant?style=for-the-badge&amp;labelColor=1A1A1A&amp;color=755315" alt="Stars" height="28"></a>
-</p>
+[![Modrinth](https://img.shields.io/badge/Modrinth-203326?logo=modrinth&logoColor=75C67A&style=for-the-badge)](https://modrinth.com/mod/remnant) [![CurseForge download via the Remnant README](https://img.shields.io/badge/CurseForge-3C2020?logo=curseforge&logoColor=F26B67&style=for-the-badge)](https://github.com/BareMinimumStudios/remnant#adding-remnant-to-a-project) [![GitHub source](https://img.shields.io/badge/Source-1A1A1A?logo=github&logoColor=F5F5F5&style=for-the-badge)](https://github.com/BareMinimumStudios/remnant) [![Report an issue](https://img.shields.io/github/issues/BareMinimumStudios/remnant?style=for-the-badge&labelColor=1A1A1A&color=8C2928)](https://github.com/BareMinimumStudios/remnant/issues) [![Forks](https://img.shields.io/github/forks/BareMinimumStudios/remnant?style=for-the-badge&labelColor=1A1A1A&color=30683B)](https://github.com/BareMinimumStudios/remnant/forks) [![Stars](https://img.shields.io/github/stars/BareMinimumStudios/remnant?style=for-the-badge&labelColor=1A1A1A&color=755315)](https://github.com/BareMinimumStudios/remnant)
 
-<p align="center" style="text-align: center;"><strong>Minecraft 1.21.1 · Fabric + NeoForge · Java 21</strong></p>
+**Minecraft 1.21.1 · Fabric + NeoForge · Java 21**
 
 Remnant keeps player data available to mods after players log out. It continues **Offline Player Cache (OPC)** as a server-side library for leaderboards, statistics, progression, and other integrations.
 
