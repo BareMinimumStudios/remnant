@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/BareMinimumStudios/remnant/HEAD/docs/assets/remnant-banner.png" alt="Remnant banner" width="100%">
+<img src="https://raw.githubusercontent.com/BareMinimumStudios/remnant/HEAD/docs/assets/remnant-banner.png" alt="Remnant wordmark beside a pixel-art ledger with red, gold, and green tabs" width="100%">
 
 <br>
 
